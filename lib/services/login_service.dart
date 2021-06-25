@@ -22,6 +22,8 @@ class LoginService {
 
       print(response);
       Global.token = response.data["access"];
+      Global.username = response.data["username"];
+      Global.type = response.data["user_type"];
       return "success";
     } on DioError catch (e) {
       print("error in loginAccess => ${e.response}");

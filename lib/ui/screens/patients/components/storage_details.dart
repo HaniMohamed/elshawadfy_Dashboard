@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../shared/constants.dart';
+import 'package:admin/shared/constants.dart';
 import 'chart.dart';
 import 'storage_info_card.dart';
 

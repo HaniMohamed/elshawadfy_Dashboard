@@ -1,4 +1,4 @@
-import 'package:admin/screens/main/main_screen.dart';
+import 'package:admin/ui/screens/main/main_screen.dart';
 import 'package:admin/services/login_service.dart';
 import 'package:flutter/material.dart';
 
@@ -93,6 +93,9 @@ class _RightSideState extends State<RightSide> {
                 width: 400,
                 child: TextField(
                   controller: usernameController,
+                  onSubmitted: (value) {
+                    login();
+                  },
                   style: TextStyle(color: Colors.black),
                   decoration: InputDecoration(
                     labelText: 'Username',
@@ -113,6 +116,9 @@ class _RightSideState extends State<RightSide> {
                 child: TextField(
                   controller: passwordController,
                   obscureText: true,
+                  onSubmitted: (value) {
+                    login();
+                  },
                   style: TextStyle(color: Colors.black),
                   decoration: InputDecoration(
                     labelText: 'Password',

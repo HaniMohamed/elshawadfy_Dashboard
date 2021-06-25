@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './widgets/leftSide.dart';
-import './widgets/rightSide.dart';
+import 'widgets/leftSide.dart';
+import 'widgets/rightSide.dart';
 
 class Login extends StatelessWidget {
   const Login({

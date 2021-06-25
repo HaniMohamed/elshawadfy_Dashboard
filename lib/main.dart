@@ -1,8 +1,8 @@
-import 'package:admin/screens/dashboard/dashboard_screen.dart';
-import 'package:admin/screens/login/login.dart';
+import 'package:admin/ui/screens/dashboard/dashboard_screen.dart';
+import 'package:admin/ui/screens/login/login.dart';
 import 'package:admin/shared/constants.dart';
 import 'package:admin/controllers/MenuController.dart';
-import 'package:admin/screens/main/main_screen.dart';
+import 'package:admin/ui/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Admin Panel',
+      title: 'Elshawadfy Radiology',
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: bgColor,
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
