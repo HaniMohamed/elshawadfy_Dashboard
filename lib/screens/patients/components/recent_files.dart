@@ -5,8 +5,8 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../shared/constants.dart';
 
-class RecentFiles extends StatelessWidget {
-  const RecentFiles({
+class PatientsTable extends StatelessWidget {
+  const PatientsTable({
     Key? key,
   }) : super(key: key);
 
@@ -22,7 +22,7 @@ class RecentFiles extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Recent Files",
+            "Patients table",
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SizedBox(
@@ -32,10 +32,10 @@ class RecentFiles extends StatelessWidget {
               minWidth: 600,
               columns: [
                 DataColumn(
-                  label: Text("File Name"),
+                  label: Text("Name"),
                 ),
                 DataColumn(
-                  label: Text("Date"),
+                  label: Text("Phone"),
                 ),
                 DataColumn(
                   label: Text("Size"),

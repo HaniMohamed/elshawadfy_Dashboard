@@ -1,59 +1,53 @@
+import 'package:admin/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class SideMenu extends StatelessWidget {
-  const SideMenu({
-    Key? key,
-  }) : super(key: key);
+class SideMenu extends StatefulWidget {
+  Function? function;
+
+  SideMenu(this.function);
+
+  @override
+  State<SideMenu> createState() => _SideMenuState();
+}
+
+class _SideMenuState extends State<SideMenu> {
+  int _selectedIndex = 0;
+  List<String> menuTitles = [
+    "Dashboard",
+    "Patients",
+  ];
+
+  List<String> menuImages = [
+    "assets/icons/menu_dashbord.svg",
+    "assets/icons/patients.svg",
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
+      child: Column(
         children: [
           DrawerHeader(
             child: Image.asset("assets/images/logo.png"),
           ),
-          DrawerListTile(
-            title: "Dashbord",
-            svgSrc: "assets/icons/menu_dashbord.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Transaction",
-            svgSrc: "assets/icons/menu_tran.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Task",
-            svgSrc: "assets/icons/menu_task.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Documents",
-            svgSrc: "assets/icons/menu_doc.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Store",
-            svgSrc: "assets/icons/menu_store.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Notification",
-            svgSrc: "assets/icons/menu_notification.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Profile",
-            svgSrc: "assets/icons/menu_profile.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Settings",
-            svgSrc: "assets/icons/menu_setting.svg",
-            press: () {},
-          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: menuTitles.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return DrawerListTile(
+                    title: menuTitles[index],
+                    svgSrc: menuImages[index],
+                    isSelected: index == _selectedIndex,
+                    press: () {
+                      widget.function!(index);
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    },
+                  );
+                }),
+          )
         ],
       ),
     );
@@ -67,16 +61,20 @@ class DrawerListTile extends StatelessWidget {
     required this.title,
     required this.svgSrc,
     required this.press,
+    required this.isSelected,
   }) : super(key: key);
 
   final String title, svgSrc;
   final VoidCallback press;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      selectedTileColor: primaryColor,
       onTap: press,
       horizontalTitleGap: 0.0,
+      selected: isSelected,
       leading: SvgPicture.asset(
         svgSrc,
         color: Colors.white54,
