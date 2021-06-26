@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:admin/shared/constants.dart';
 import 'package:admin/shared/global.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginService {
   Future<String> login(String username, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     FormData formData = FormData.fromMap({
       "username": "$username",
       "password": "$password",
@@ -21,9 +23,12 @@ class LoginService {
       );
 
       print(response);
-      Global.token = response.data["access"];
-      Global.username = response.data["username"];
-      Global.type = response.data["user_type"];
+      prefs.setString("token", response.data["access"]);
+      prefs.setString("username", response.data["username"]);
+      prefs.setString("type", response.data["user_type"]);
+      // Global.token = response.data["access"];
+      // Global.username = response.data["username"];
+      // Global.type = response.data["user_type"];
       return "success";
     } on DioError catch (e) {
       print("error in loginAccess => ${e.response}");
