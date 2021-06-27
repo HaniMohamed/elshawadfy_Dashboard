@@ -1,9 +1,10 @@
 import 'package:admin/responsive.dart';
 import 'package:admin/shared/constants.dart';
+import 'package:admin/ui/widgtes/dialogs/new_user.dart';
 import 'package:admin/ui/widgtes/header.dart';
 import 'package:flutter/material.dart';
 
-import 'components/recent_files.dart';
+import 'components/patients_table.dart';
 import 'components/storage_details.dart';
 
 class PatientsScreen extends StatelessWidget {
@@ -25,7 +26,23 @@ class PatientsScreen extends StatelessWidget {
                   flex: 5,
                   child: Column(
                     children: [
-                      // MyFiles(),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ElevatedButton.icon(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: defaultPadding * 1.5,
+                              vertical: defaultPadding /
+                                  (Responsive.isMobile(context) ? 2 : 1),
+                            ),
+                          ),
+                          onPressed: () {
+                            showAddUserDialog(context);
+                          },
+                          icon: Icon(Icons.add),
+                          label: Text("Add New"),
+                        ),
+                      ),
                       SizedBox(height: defaultPadding),
                       PatientsTable(),
                       if (Responsive.isMobile(context))
@@ -48,5 +65,17 @@ class PatientsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  showAddUserDialog(context) {
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Add new Patient'),
+            content: NewUserDialog(),
+          );
+        });
   }
 }
