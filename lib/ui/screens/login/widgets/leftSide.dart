@@ -24,9 +24,7 @@ class LeftSide extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                      width: 120,
-                      child:
-                          Image.asset('assets/images/invision_logo_white.png'))
+                      width: 120, child: Image.asset('assets/images/logo.png'))
                 ],
               ),
               SizedBox(height: 200),

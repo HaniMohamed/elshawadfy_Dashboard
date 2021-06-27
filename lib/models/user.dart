@@ -11,6 +11,8 @@ class User {
   String? address;
   String? notes;
   String? type;
+  String? createdAt;
+  String? updatedAt;
 
   User(
       {this.id,
@@ -24,7 +26,9 @@ class User {
       this.phone,
       this.address,
       this.notes,
-      this.type});
+      this.type,
+      this.createdAt,
+      this.updatedAt});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -43,6 +47,8 @@ class User {
     address = json['address'];
     notes = json['notes'];
     type = json['type'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {

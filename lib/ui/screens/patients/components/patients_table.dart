@@ -71,6 +71,9 @@ class _PatientsTableState extends State<PatientsTable> {
                             label: Text("Phone"),
                           ),
                           DataColumn(
+                            label: Text("Date"),
+                          ),
+                          DataColumn(
                             label: Text("notes"),
                           ),
                         ],
@@ -91,6 +94,7 @@ class _PatientsTableState extends State<PatientsTable> {
 }
 
 DataRow patientDataRow(User user) {
+  DateTime date = DateTime.parse(user.createdAt.toString());
   return DataRow(
     cells: [
       DataCell(
@@ -111,6 +115,10 @@ DataRow patientDataRow(User user) {
       ),
       DataCell(Text(user.sex.toString())),
       DataCell(Text(user.phone.toString())),
+      DataCell(Text(
+        "${date.hour}:${date.minute}\n${date.year}/${date.month}/${date.day}",
+        textAlign: TextAlign.center,
+      )),
       DataCell(Text(user.notes.toString())),
     ],
   );
