@@ -1,3 +1,4 @@
+import 'package:admin/responsive.dart';
 import 'package:flutter/material.dart';
 
 class LeftSide extends StatelessWidget {
@@ -17,7 +18,7 @@ class LeftSide extends StatelessWidget {
           fit: BoxFit.cover,
         )),
         child: Container(
-          margin: EdgeInsets.fromLTRB(100, 50, 0, 30),
+          margin: EdgeInsets.all(30),
           child: Column(
             children: <Widget>[
               Row(
@@ -27,39 +28,35 @@ class LeftSide extends StatelessWidget {
                       width: 120, child: Image.asset('assets/images/logo.png'))
                 ],
               ),
-              SizedBox(height: 200),
+              Expanded(child: Container()),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Container(
-                          child: Text(
-                            'INVISION ENTERPRISE',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontStyle: FontStyle.italic),
-                          ),
-                        ),
                         Container(
                           margin: EdgeInsets.fromLTRB(0, 5, 0, 30),
                           child: Text(
-                            'YOUR UNIFIED, SCALABLE WORKFLOW-ALL IN ONE PLACE',
+                            '\"Bringing The Future Of Healthcare\"',
+                            maxLines: 5,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                              fontSize: Responsive.isMobile(context)
+                                  ? MediaQuery.of(context).size.width * 0.035
+                                  : MediaQuery.of(context).size.width * 0.02,
                             ),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 30),
-                          child: Text(
-                            'Empower smarter design. Go to market faster. Spark design-driven innovation.',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
-                          ),
-                        ),
+                        // Container(
+                        //   margin: EdgeInsets.only(bottom: 30),
+                        //   child: Text(
+                        //     'Empower smarter design. Go to market faster. Spark design-driven innovation.',
+                        //     style: TextStyle(color: Colors.white, fontSize: 15),
+                        //   ),
+                        // ),
                         // OutlineButton(
                         //   padding: EdgeInsets.fromLTRB(40, 15, 40, 15),
                         //   onPressed: () {},

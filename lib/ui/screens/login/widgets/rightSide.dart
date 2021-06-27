@@ -1,3 +1,4 @@
+import 'package:admin/shared/constants.dart';
 import 'package:admin/ui/screens/main/main_screen.dart';
 import 'package:admin/services/login_service.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _RightSideState extends State<RightSide> {
     return Flexible(
       flex: 3,
       child: Container(
-        padding: EdgeInsets.all(50),
+        padding: EdgeInsets.all(30),
         color: Colors.white,
         child: Center(
           child: Column(
@@ -60,22 +61,21 @@ class _RightSideState extends State<RightSide> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'ElShawadfy Radiology System',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: Colors.pink,
-                        letterSpacing: 2),
-                  ),
-                  Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                  // Text(
+                  //   'ElShawadfy Radiology System',
+                  //   style: TextStyle(
+                  //       fontWeight: FontWeight.bold,
+                  //       fontSize: 25,
+                  //       color: Colors.pink,
+                  //       letterSpacing: 2),
+                  // ),
+                  // Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                   Text(
                     'Sign in',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: Colors.black,
-                        letterSpacing: 1),
+                        fontSize: MediaQuery.of(context).size.width * 0.03,
+                        color: Colors.black),
                   ),
                 ],
               ),
@@ -85,22 +85,19 @@ class _RightSideState extends State<RightSide> {
               //       'Enter your details below',
               //       style: TextStyle(color: Colors.grey),
               //     )),
-              SizedBox(
-                height: 100,
-              ),
+
               Container(
-                margin: EdgeInsets.only(bottom: 10),
-                width: 400,
+                margin: EdgeInsets.only(top: 20),
                 child: TextField(
                   controller: usernameController,
                   onSubmitted: (value) {
                     login();
                   },
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: primaryColor),
                   decoration: InputDecoration(
                     labelText: 'Username',
                     icon: Image.asset('assets/images/user.png'),
-                    labelStyle: TextStyle(color: Colors.pink),
+                    labelStyle: TextStyle(color: secondaryColor),
 
                     // prefix: Image.asset('images/user.png'),
                     // prefixIcon: Icon(Icons.person),
@@ -112,17 +109,17 @@ class _RightSideState extends State<RightSide> {
                 ),
               ),
               Container(
-                width: 400,
+                margin: EdgeInsets.only(top: 10),
                 child: TextField(
                   controller: passwordController,
                   obscureText: true,
                   onSubmitted: (value) {
                     login();
                   },
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: primaryColor),
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    labelStyle: TextStyle(color: Colors.pink),
+                    labelStyle: TextStyle(color: secondaryColor),
                     icon: Image.asset('assets/images/closed-lock.png'),
                     // prefix: Image.asset('images/closed-lock.png'),
                     // prefixIcon: Icon(Icons.person),
@@ -136,28 +133,31 @@ class _RightSideState extends State<RightSide> {
               errorText == null
                   ? Container()
                   : Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
+                      margin: EdgeInsets.only(top: 5),
                       alignment: Alignment.center,
                       child: Text(
                         '$errorText',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: MediaQuery.of(context).size.width * 0.02),
                       ),
                     ),
               Container(
-                margin: EdgeInsets.only(top: 30),
+                margin: EdgeInsets.only(top: 10),
                 child: isLoading
                     ? CircularProgressIndicator()
-                    : RaisedButton(
-                        padding: EdgeInsets.fromLTRB(50, 15, 50, 15),
+                    : ElevatedButton(
                         onPressed: () => login(),
                         child: Text(
                           'Login',
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
-                        color: Colors.pink,
-                      ),
+                        style: ElevatedButton.styleFrom(
+                          primary: primaryColor,
+                        )),
               ),
+              // ),
               // Container(
               //     margin: EdgeInsets.only(top: 30),
               //     padding: EdgeInsets.only(top: 20),
