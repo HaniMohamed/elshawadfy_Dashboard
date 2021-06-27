@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:admin/models/RecentFile.dart';
 import 'package:admin/models/user.dart';
+import 'package:admin/responsive.dart';
 import 'package:admin/services/get_users_service.dart';
 import 'package:admin/view_model/patient_view_nodel.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -64,24 +65,27 @@ class _PatientsTableState extends State<PatientsTable> {
                           DataColumn(
                             label: Text("Name"),
                           ),
-                          DataColumn(
-                            label: Text("Sex"),
-                          ),
+                          if (!Responsive.isMobile(context))
+                            DataColumn(
+                              label: Text("Sex"),
+                            ),
                           DataColumn(
                             label: Text("Phone"),
                           ),
-                          DataColumn(
-                            label: Text("Date"),
-                          ),
-                          DataColumn(
-                            label: Text("notes"),
-                          ),
+                          if (!Responsive.isMobile(context))
+                            DataColumn(
+                              label: Text("Date"),
+                            ),
+                          if (!Responsive.isMobile(context))
+                            DataColumn(
+                              label: Text("notes"),
+                            ),
                         ],
                         // rows: List.generate(
                         //   patientModel.users.length,
                         //   (index) => patientDataRow(patients[index]),
                         rows: patientModel.users
-                            .map((user) => patientDataRow(user))
+                            .map((user) => patientDataRow(user, context))
                             .toList(),
                       );
                     },
@@ -93,7 +97,7 @@ class _PatientsTableState extends State<PatientsTable> {
   }
 }
 
-DataRow patientDataRow(User user) {
+DataRow patientDataRow(User user, context) {
   DateTime date = DateTime.parse(user.createdAt.toString());
   return DataRow(
     cells: [
@@ -113,13 +117,14 @@ DataRow patientDataRow(User user) {
           ],
         ),
       ),
-      DataCell(Text(user.sex.toString())),
+      if (!Responsive.isMobile(context)) DataCell(Text(user.sex.toString())),
       DataCell(Text(user.phone.toString())),
-      DataCell(Text(
-        "${date.hour}:${date.minute}\n${date.year}/${date.month}/${date.day}",
-        textAlign: TextAlign.center,
-      )),
-      DataCell(Text(user.notes.toString())),
+      if (!Responsive.isMobile(context))
+        DataCell(Text(
+          "${date.hour}:${date.minute}\n${date.year}/${date.month}/${date.day}",
+          textAlign: TextAlign.center,
+        )),
+      if (!Responsive.isMobile(context)) DataCell(Text(user.notes.toString())),
     ],
   );
 }
