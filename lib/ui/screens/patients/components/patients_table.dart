@@ -8,6 +8,7 @@ import 'package:admin/view_model/patient_view_nodel.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:admin/shared/constants.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,9 @@ class _PatientsTableState extends State<PatientsTable> {
     getPatients();
   }
 
+  bool sort = false;
+  int sortIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,11 +65,20 @@ class _PatientsTableState extends State<PatientsTable> {
                     builder: (context, patientModel, child) {
                       return DataTable2(
                         columnSpacing: defaultPadding,
+                        sortAscending: sort,
+                        sortColumnIndex: sortIndex,
                         columns: [
                           DataColumn(
                             label: Text("Name"),
+                            onSort: (columnIndex, ascending) {
+                              setState(() {
+                                sort = !sort;
+                                sortIndex = columnIndex;
+                              });
+                              onSortColumn(columnIndex, ascending);
+                            },
                           ),
-                          if (!Responsive.isMobile(context))
+                          if (Responsive.isDesktop(context))
                             DataColumn(
                               label: Text("Sex"),
                             ),
@@ -76,7 +89,7 @@ class _PatientsTableState extends State<PatientsTable> {
                             DataColumn(
                               label: Text("Date"),
                             ),
-                          if (!Responsive.isMobile(context))
+                          if (Responsive.isDesktop(context))
                             DataColumn(
                               label: Text("notes"),
                             ),
@@ -94,6 +107,23 @@ class _PatientsTableState extends State<PatientsTable> {
         ],
       ),
     );
+  }
+
+  onSortColumn(int columnIndex, bool ascending) {
+    if (columnIndex == 0) {
+      if (ascending) {
+        patients.sort((a, b) => a.username!.compareTo(b.username!));
+      } else {
+        patients.sort((a, b) => b.username!.compareTo(a.username!));
+      }
+    }
+    if (columnIndex == 3) {
+      if (ascending) {
+        patients.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+      } else {
+        patients.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+      }
+    }
   }
 }
 
@@ -117,14 +147,14 @@ DataRow patientDataRow(User user, context) {
           ],
         ),
       ),
-      if (!Responsive.isMobile(context)) DataCell(Text(user.sex.toString())),
+      if (Responsive.isDesktop(context)) DataCell(Text(user.sex.toString())),
       DataCell(Text(user.phone.toString())),
       if (!Responsive.isMobile(context))
         DataCell(Text(
           "${date.hour}:${date.minute}\n${date.year}/${date.month}/${date.day}",
           textAlign: TextAlign.center,
         )),
-      if (!Responsive.isMobile(context)) DataCell(Text(user.notes.toString())),
+      if (Responsive.isDesktop(context)) DataCell(Text(user.notes.toString())),
     ],
   );
 }
