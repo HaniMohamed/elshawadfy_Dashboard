@@ -28,8 +28,8 @@ class _LoginState extends State<Login> {
       Object? token = prefs.get("token");
       log("token: ${token.toString()}");
       if (token != null) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MainScreen()));
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       } else {
         setState(() {
           newLogin = true;

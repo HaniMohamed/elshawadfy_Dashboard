@@ -35,10 +35,8 @@ class NewUserService {
     } on DioError catch (e) {
       log("error in createUser => ${e.response!.data}");
       if (e.response!.statusCode == 403) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Login()),
-        );
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       }
       return "${e.response!.data}";
     }

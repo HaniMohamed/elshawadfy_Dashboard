@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:admin/controllers/MenuController.dart';
 import 'package:admin/responsive.dart';
 import 'package:admin/ui/screens/dashboard/dashboard_screen.dart';
 import 'package:admin/ui/screens/patients/pateints_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'components/side_menu.dart';
 
@@ -16,10 +19,27 @@ class _MainScreenState extends State<MainScreen> {
   int _drawerIndex = 0;
   List<Widget> bodyWidgets = [DashboardScreen(), PatientsScreen()];
 
+  checkAuthenticated(context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    Object? token = prefs.get("token");
+    log("token: ${token.toString()}");
+    if (token == null) {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+    }
+  }
+
   changeBody(int index) {
     setState(() {
       _drawerIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    checkAuthenticated(context);
+    super.initState();
   }
 
   @override

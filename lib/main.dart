@@ -3,6 +3,7 @@ import 'package:admin/ui/screens/login/login.dart';
 import 'package:admin/shared/constants.dart';
 import 'package:admin/controllers/MenuController.dart';
 import 'package:admin/ui/screens/main/main_screen.dart';
+import 'package:admin/ui/screens/patients/pateints_screen.dart';
 import 'package:admin/view_model/patient_view_nodel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,9 +35,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => Login(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/': (context) => MainScreen(),
+        '/login': (context) => Login(),
       },
     );
   }

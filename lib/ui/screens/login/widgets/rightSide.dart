@@ -35,10 +35,8 @@ class _RightSideState extends State<RightSide> {
         isLoading = false;
       });
       if (result == "success") {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MainScreen()),
-        );
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            '/', (Route<dynamic> route) => false);
       } else {
         setState(() {
           errorText = result;

@@ -57,10 +57,8 @@ class _ProfileCardState extends State<ProfileCard> {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
 
                 prefs.clear();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/login', (Route<dynamic> route) => false);
               },
               icon: Icon(Icons.logout))
         ],

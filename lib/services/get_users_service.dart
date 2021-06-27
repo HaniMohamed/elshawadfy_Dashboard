@@ -43,10 +43,8 @@ class GetUsers {
     } on DioError catch (e) {
       log("error in loginAccess => ${e.response}");
       if (e.response!.statusCode == 403) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Login()),
-        );
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       }
     }
     return users;
