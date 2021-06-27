@@ -9,5 +9,7 @@ const defaultPadding = 16.0;
 const domainName = "https://elshawadfy-radiology.herokuapp.com/";
 const loginAPI = "api/v1/users/login/";
 const listDoctorsAPI = "api/v1/users/doctors";
-const listPatientsAPI = "api/v1/users/doctors";
+const listPatientsAPI = "api/v1/users/patients";
 const listReceptionistsAPI = "api/v1/users/receptionists";
+
+const newUserAPI = "api/v1/users/new";

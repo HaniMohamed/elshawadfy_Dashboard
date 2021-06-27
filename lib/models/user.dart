@@ -47,7 +47,6 @@ class User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
     data['username'] = this.username;
     data['first_name'] = this.firstName;
     data['last_name'] = this.lastName;
@@ -61,7 +60,9 @@ class User {
     }
     data['phone'] = this.phone;
     data['address'] = this.address;
-    data['notes'] = this.notes;
+    if (this.notes != null) {
+      data['notes'] = this.notes;
+    }
     data['type'] = this.type;
     return data;
   }
