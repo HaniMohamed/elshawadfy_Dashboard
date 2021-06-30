@@ -87,15 +87,17 @@ class _PatientsTableState extends State<PatientsTable> {
                             ),
                           if (Responsive.isDesktop(context))
                             DataColumn(
-                              label: Text("notes"),
+                              label: Text("Notes"),
                             ),
                           DataColumn(
-                            label: Text("actions"),
+                            label: Row(
+                              children: [
+                                Text("Actions"),
+                              ],
+                              mainAxisAlignment: MainAxisAlignment.center,
+                            ),
                           ),
                         ],
-                        // rows: List.generate(
-                        //   patientModel.users.length,
-                        //   (index) => patientDataRow(patients[index]),
                         rows: patientModel.users
                             .map((user) => patientDataRow(user, context))
                             .toList(),
@@ -179,14 +181,19 @@ class _PatientsTableState extends State<PatientsTable> {
                             color: Colors.redAccent,
                           ),
                           Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            margin: EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
-                                "Are you sure to delete Patient (${user.username}) !!"),
+                              "Are you sure to delete patient (${user.username}) !!",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ],
                       ),
                       action: SnackBarAction(
-                        label: 'Sure',
+                        label: 'Yes, Delete',
+                        textColor: Colors.red,
                         onPressed: () async {
                           String status = await Provider.of<PatientViewModel>(
                                   context,
@@ -197,6 +204,15 @@ class _PatientsTableState extends State<PatientsTable> {
                     ));
                   },
                   icon: Icon(Icons.delete_forever)),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.perm_contact_calendar_outlined,
+                    color: Colors.blue,
+                  )),
             ),
           ],
         )),

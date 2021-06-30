@@ -106,7 +106,7 @@ class _NewEditUserDialogState extends State<NewEditUserDialog> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.3,
+        width: MediaQuery.of(context).size.width * 0.4,
         child: Form(
             key: _formKey,
             child: Column(
@@ -182,7 +182,7 @@ class _NewEditUserDialogState extends State<NewEditUserDialog> {
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Last Name',
-                      icon: Icon(Icons.title),
+                      icon: Icon(Icons.text_fields),
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.grey)),
                       enabledBorder: new OutlineInputBorder(
@@ -190,13 +190,13 @@ class _NewEditUserDialogState extends State<NewEditUserDialog> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 22),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text("type:"),
+                      Text("Type:"),
                       Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
                       Radio(
                         value: 'M',
@@ -238,7 +238,7 @@ class _NewEditUserDialogState extends State<NewEditUserDialog> {
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Age',
-                      icon: Icon(Icons.calendar_today),
+                      icon: Icon(Icons.calendar_today_rounded),
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.grey)),
                       enabledBorder: new OutlineInputBorder(
@@ -331,6 +331,8 @@ class _NewEditUserDialogState extends State<NewEditUserDialog> {
                     children: [
                       ElevatedButton(
                         child: Text("Save"),
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 40)),
                         onPressed: () {
                           save();
                         },
@@ -338,8 +340,9 @@ class _NewEditUserDialogState extends State<NewEditUserDialog> {
                       Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
                       ElevatedButton(
                         child: Text("Close"),
-                        style:
-                            ElevatedButton.styleFrom(primary: Colors.blueGrey),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.blueGrey,
+                            padding: EdgeInsets.symmetric(horizontal: 40)),
                         onPressed: () {
                           Navigator.pop(context);
                         },
