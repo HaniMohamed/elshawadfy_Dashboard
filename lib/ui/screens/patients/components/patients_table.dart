@@ -1,16 +1,11 @@
 import 'dart:math';
-
-import 'package:admin/models/RecentFile.dart';
 import 'package:admin/models/user.dart';
 import 'package:admin/responsive.dart';
-import 'package:admin/services/user_services/get_users_service.dart';
+import 'package:admin/services/crud_users_services.dart';
 import 'package:admin/ui/widgtes/dialogs/new_edit_user_dialog.dart';
-import 'package:admin/view_model/patient_view_nodel.dart';
+import 'package:admin/view_model/patient_view_model.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-
 import 'package:admin/shared/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -177,7 +172,29 @@ class _PatientsTableState extends State<PatientsTable> {
               child: IconButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Delete Patient ${user.username}")));
+                      content: Row(
+                        children: [
+                          Icon(
+                            Icons.delete_forever_outlined,
+                            color: Colors.redAccent,
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            child: Text(
+                                "Are you sure to delete Patient (${user.username}) !!"),
+                          ),
+                        ],
+                      ),
+                      action: SnackBarAction(
+                        label: 'Sure',
+                        onPressed: () async {
+                          String status = await Provider.of<PatientViewModel>(
+                                  context,
+                                  listen: false)
+                              .deletePatient(user, context);
+                        },
+                      ),
+                    ));
                   },
                   icon: Icon(Icons.delete_forever)),
             ),

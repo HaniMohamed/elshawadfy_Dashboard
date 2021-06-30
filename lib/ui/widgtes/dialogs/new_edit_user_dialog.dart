@@ -1,7 +1,5 @@
 import 'package:admin/models/user.dart';
-import 'package:admin/services/user_services/new_user_service.dart';
-import 'package:admin/ui/widgtes/header.dart';
-import 'package:admin/view_model/patient_view_nodel.dart';
+import 'package:admin/view_model/patient_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
