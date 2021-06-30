@@ -40,6 +40,7 @@ class CRUDUsersServices {
     } on DioError catch (e) {
       log("error in loginAccess => ${e.response}");
       if (e.response!.statusCode == 403) {
+        prefs.clear();
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       }
@@ -72,6 +73,7 @@ class CRUDUsersServices {
     } on DioError catch (e) {
       log("error in createUser => ${e.response!.data}");
       if (e.response!.statusCode == 403) {
+        prefs.clear();
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       }
@@ -104,6 +106,7 @@ class CRUDUsersServices {
     } on DioError catch (e) {
       log("error in editingUser => ${e.response!.data}");
       if (e.response!.statusCode == 403) {
+        prefs.clear();
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       }
@@ -134,6 +137,7 @@ class CRUDUsersServices {
     } on DioError catch (e) {
       log("error in deletingUser => ${e.response!.data}");
       if (e.response!.statusCode == 403) {
+        prefs.clear();
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       }

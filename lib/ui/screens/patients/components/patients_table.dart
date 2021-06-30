@@ -63,6 +63,7 @@ class _PatientsTableState extends State<PatientsTable> {
                         columnSpacing: defaultPadding,
                         sortAscending: sort,
                         sortColumnIndex: sortIndex,
+                        dataRowHeight: 80,
                         columns: [
                           DataColumn(
                             label: Text("Name"),
