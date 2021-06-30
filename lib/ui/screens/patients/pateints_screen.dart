@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:admin/responsive.dart';
 import 'package:admin/shared/constants.dart';
-import 'package:admin/ui/widgtes/dialogs/new_user.dart';
+import 'package:admin/ui/widgtes/dialogs/new_edit_user_dialog.dart';
 import 'package:admin/ui/widgtes/header.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,7 +77,9 @@ class PatientsScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Add new Patient'),
-            content: NewUserDialog(),
+            content: NewEditUserDialog(
+              type: "P",
+            ),
           );
         });
   }

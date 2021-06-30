@@ -13,3 +13,4 @@ const listPatientsAPI = "api/v1/users/patients";
 const listReceptionistsAPI = "api/v1/users/receptionists";
 
 const newUserAPI = "api/v1/users/new";
+const editUserAPI = "api/v1/users/update/";

@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:admin/models/RecentFile.dart';
 import 'package:admin/models/user.dart';
 import 'package:admin/responsive.dart';
-import 'package:admin/services/get_users_service.dart';
+import 'package:admin/services/user_services/get_users_service.dart';
+import 'package:admin/ui/widgtes/dialogs/new_edit_user_dialog.dart';
 import 'package:admin/view_model/patient_view_nodel.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
@@ -93,6 +94,9 @@ class _PatientsTableState extends State<PatientsTable> {
                             DataColumn(
                               label: Text("notes"),
                             ),
+                          DataColumn(
+                            label: Text("actions"),
+                          ),
                         ],
                         // rows: List.generate(
                         //   patientModel.users.length,
@@ -125,36 +129,77 @@ class _PatientsTableState extends State<PatientsTable> {
       }
     }
   }
-}
 
-DataRow patientDataRow(User user, context) {
-  DateTime date = DateTime.parse(user.createdAt.toString());
-  return DataRow(
-    cells: [
-      DataCell(
-        Row(
+  DataRow patientDataRow(User user, context) {
+    DateTime date = DateTime.parse(user.createdAt.toString());
+    return DataRow(
+      cells: [
+        DataCell(
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors
+                    .primaries[Random().nextInt(Colors.primaries.length)]
+                    .shade400,
+                child: Text(user.username!.substring(0, 2).toString()),
+              ),
+              Container(
+                width: Responsive.isMobile(context)
+                    ? MediaQuery.of(context).size.width * 0.2
+                    : MediaQuery.of(context).size.width * 0.06,
+                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+                child: Text(user.username!),
+              ),
+            ],
+          ),
+        ),
+        if (Responsive.isDesktop(context)) DataCell(Text(user.sex.toString())),
+        DataCell(Text(user.phone.toString())),
+        if (!Responsive.isMobile(context))
+          DataCell(Text(
+            "${date.hour}:${date.minute}\n${date.year}/${date.month}/${date.day}",
+            textAlign: TextAlign.center,
+          )),
+        if (Responsive.isDesktop(context))
+          DataCell(Text(user.notes.toString())),
+        DataCell(Row(
           children: [
-            CircleAvatar(
-              backgroundColor: Colors
-                  .primaries[Random().nextInt(Colors.primaries.length)]
-                  .shade400,
-              child: Text(user.username!.substring(0, 2).toString()),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: IconButton(
+                  onPressed: () {
+                    showEditUserDialog(context, user);
+                  },
+                  icon: Icon(Icons.edit)),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(user.username!),
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: IconButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Delete Patient ${user.username}")));
+                  },
+                  icon: Icon(Icons.delete_forever)),
             ),
           ],
-        ),
-      ),
-      if (Responsive.isDesktop(context)) DataCell(Text(user.sex.toString())),
-      DataCell(Text(user.phone.toString())),
-      if (!Responsive.isMobile(context))
-        DataCell(Text(
-          "${date.hour}:${date.minute}\n${date.year}/${date.month}/${date.day}",
-          textAlign: TextAlign.center,
         )),
-      if (Responsive.isDesktop(context)) DataCell(Text(user.notes.toString())),
-    ],
-  );
+      ],
+    );
+  }
+
+  showEditUserDialog(context, User? user) {
+    showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Edit Patient (${user!.username})'),
+            content: NewEditUserDialog(
+              type: "P",
+              isEditing: true,
+              user: user,
+            ),
+          );
+        });
+  }
 }

@@ -1,19 +1,23 @@
 import 'package:admin/models/user.dart';
-import 'package:admin/services/new_user_service.dart';
+import 'package:admin/services/user_services/new_user_service.dart';
 import 'package:admin/ui/widgtes/header.dart';
 import 'package:admin/view_model/patient_view_nodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class NewUserDialog extends StatefulWidget {
-  const NewUserDialog({Key? key, String? type}) : super(key: key);
+class NewEditUserDialog extends StatefulWidget {
+  User? user;
+  String? type;
+  bool isEditing = false;
+
+  NewEditUserDialog({required this.type, this.user, this.isEditing = false});
 
   @override
-  _NewUserDialogState createState() => _NewUserDialogState();
+  _NewEditUserDialogState createState() => _NewEditUserDialogState();
 }
 
-class _NewUserDialogState extends State<NewUserDialog> {
+class _NewEditUserDialogState extends State<NewEditUserDialog> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
   TextEditingController firstnameController = TextEditingController();
@@ -24,18 +28,19 @@ class _NewUserDialogState extends State<NewUserDialog> {
   TextEditingController notesController = TextEditingController();
 
   String? _errorText;
-  String _radioValue = 'm';
+  String _radioValue = 'M';
   String? choice;
   bool isLoading = false;
 
   save() async {
+    String result;
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
 
       User user = User(
-          type: "P",
+          type: "${widget.type}",
           username: usernameController.text,
           firstName: firstnameController.text,
           lastName: lastnameController.text,
@@ -45,9 +50,14 @@ class _NewUserDialogState extends State<NewUserDialog> {
           address: addressController.text,
           notes: notesController.text);
 
-      String result =
-          await Provider.of<PatientViewModel>(context, listen: false)
-              .newPatient(user, context);
+      if (widget.isEditing) {
+        user.id = widget.user!.id;
+        result = await Provider.of<PatientViewModel>(context, listen: false)
+            .editPatient(user, context);
+      } else
+        result = await Provider.of<PatientViewModel>(context, listen: false)
+            .newPatient(user, context);
+
       setState(() {
         isLoading = false;
         if (result == "success") {
@@ -63,10 +73,10 @@ class _NewUserDialogState extends State<NewUserDialog> {
     setState(() {
       _radioValue = value!;
       switch (value) {
-        case 'm':
+        case 'M':
           choice = value;
           break;
-        case 'f':
+        case 'F':
           choice = value;
           break;
 
@@ -75,6 +85,23 @@ class _NewUserDialogState extends State<NewUserDialog> {
       }
       debugPrint(choice); //Debug the choice in console
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isEditing) {
+      setState(() {
+        _radioValue = widget.user!.sex ?? "";
+        usernameController.text = widget.user!.username ?? "";
+        firstnameController.text = widget.user!.firstName ?? "";
+        lastnameController.text = widget.user!.lastName ?? "";
+        ageController.text = widget.user!.age.toString();
+        phoneController.text = widget.user!.phone ?? "";
+        addressController.text = widget.user!.address ?? "";
+        notesController.text = widget.user!.notes ?? "";
+      });
+    }
   }
 
   @override
@@ -104,7 +131,7 @@ class _NewUserDialogState extends State<NewUserDialog> {
                     onFieldSubmitted: (value) {
                       save();
                     },
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Username',
                       icon: Icon(Icons.person),
@@ -129,7 +156,7 @@ class _NewUserDialogState extends State<NewUserDialog> {
                     onFieldSubmitted: (value) {
                       save();
                     },
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'First Name',
                       icon: Icon(Icons.title),
@@ -154,7 +181,7 @@ class _NewUserDialogState extends State<NewUserDialog> {
                     onFieldSubmitted: (value) {
                       save();
                     },
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Last Name',
                       icon: Icon(Icons.title),
@@ -174,7 +201,7 @@ class _NewUserDialogState extends State<NewUserDialog> {
                       Text("type:"),
                       Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
                       Radio(
-                        value: 'm',
+                        value: 'M',
                         groupValue: _radioValue,
                         onChanged: radioButtonChanges,
                       ),
@@ -183,7 +210,7 @@ class _NewUserDialogState extends State<NewUserDialog> {
                       ),
                       Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
                       Radio(
-                        value: 'f',
+                        value: 'F',
                         groupValue: _radioValue,
                         onChanged: radioButtonChanges,
                       ),
@@ -210,7 +237,7 @@ class _NewUserDialogState extends State<NewUserDialog> {
                     onFieldSubmitted: (value) {
                       save();
                     },
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Age',
                       icon: Icon(Icons.calendar_today),
@@ -238,7 +265,7 @@ class _NewUserDialogState extends State<NewUserDialog> {
                     onFieldSubmitted: (value) {
                       save();
                     },
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white),
                     maxLength: 11,
                     decoration: InputDecoration(
                       labelText: 'Phone',
@@ -258,7 +285,7 @@ class _NewUserDialogState extends State<NewUserDialog> {
                     onFieldSubmitted: (value) {
                       save();
                     },
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Address',
                       icon: Icon(Icons.location_city),
@@ -278,7 +305,7 @@ class _NewUserDialogState extends State<NewUserDialog> {
                     onFieldSubmitted: (value) {
                       save();
                     },
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Notes',
                       icon: Icon(Icons.notes),
@@ -305,7 +332,7 @@ class _NewUserDialogState extends State<NewUserDialog> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ElevatedButton(
-                        child: Text("Add"),
+                        child: Text("Save"),
                         onPressed: () {
                           save();
                         },
