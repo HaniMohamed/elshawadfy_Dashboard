@@ -1,33 +1,35 @@
+import 'dart:developer' as Developer;
 import 'dart:math';
+import 'package:admin/models/appointment.dart';
 import 'package:admin/models/user.dart';
 import 'package:admin/responsive.dart';
-import 'package:admin/services/crud_users_services.dart';
 import 'package:admin/ui/widgtes/dialogs/new_edit_user_dialog.dart';
-import 'package:admin/view_model/patient_view_model.dart';
+import 'package:admin/view_model/appointment_view_model.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/shared/constants.dart';
 import 'package:provider/provider.dart';
 
-class PatientsTable extends StatefulWidget {
-  const PatientsTable({
+class AppointmentsTable extends StatefulWidget {
+  const AppointmentsTable({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<PatientsTable> createState() => _PatientsTableState();
+  State<AppointmentsTable> createState() => _AppointmentsTableState();
 }
 
-class _PatientsTableState extends State<PatientsTable> {
-  List<User> patients = [];
+class _AppointmentsTableState extends State<AppointmentsTable> {
+  List<Appointment> appointments = [];
   bool isLoading = false;
 
-  getPatients() async {
+  getAppointments() async {
     setState(() {
       isLoading = true;
     });
-    patients = await Provider.of<PatientViewModel>(context, listen: false)
-        .getPatients(context);
+    appointments =
+        await Provider.of<AppointmentViewModel>(context, listen: false)
+            .getAppointments(context);
     setState(() {
       isLoading = false;
     });
@@ -36,7 +38,7 @@ class _PatientsTableState extends State<PatientsTable> {
   @override
   void initState() {
     super.initState();
-    getPatients();
+    getAppointments();
   }
 
   bool sort = false;
@@ -57,8 +59,8 @@ class _PatientsTableState extends State<PatientsTable> {
             width: double.infinity,
             child: isLoading
                 ? Center(child: CircularProgressIndicator())
-                : Consumer<PatientViewModel>(
-                    builder: (context, patientModel, child) {
+                : Consumer<AppointmentViewModel>(
+                    builder: (context, appointmentModel, child) {
                       return DataTable2(
                         columnSpacing: defaultPadding,
                         sortAscending: sort,
@@ -66,21 +68,20 @@ class _PatientsTableState extends State<PatientsTable> {
                         dataRowHeight: 80,
                         columns: [
                           DataColumn(
-                            label: Text("Name"),
+                            label: Text("Patient"),
                             onSort: (columnIndex, ascending) {
                               setState(() {
                                 sort = !sort;
                                 sortIndex = columnIndex;
                               });
-                              onSortColumn(columnIndex, ascending);
+                              // onSortColumn(columnIndex, ascending);
                             },
                           ),
-                          if (Responsive.isDesktop(context))
-                            DataColumn(
-                              label: Text("Sex"),
-                            ),
                           DataColumn(
-                            label: Text("Phone"),
+                            label: Text("Rays"),
+                          ),
+                          DataColumn(
+                            label: Text("Tot. Price"),
                           ),
                           if (!Responsive.isMobile(context))
                             DataColumn(
@@ -99,8 +100,9 @@ class _PatientsTableState extends State<PatientsTable> {
                             ),
                           ),
                         ],
-                        rows: patientModel.users
-                            .map((user) => patientDataRow(user, context))
+                        rows: appointmentModel.appointments
+                            .map((appointment) =>
+                                appointmentDataRow(appointment, context))
                             .toList(),
                       );
                     },
@@ -111,25 +113,31 @@ class _PatientsTableState extends State<PatientsTable> {
     );
   }
 
-  onSortColumn(int columnIndex, bool ascending) {
-    if (columnIndex == 0) {
-      if (ascending) {
-        patients.sort((a, b) => a.username!.compareTo(b.username!));
-      } else {
-        patients.sort((a, b) => b.username!.compareTo(a.username!));
-      }
-    }
-    if (columnIndex == 3) {
-      if (ascending) {
-        patients.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
-      } else {
-        patients.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
-      }
-    }
-  }
+  // onSortColumn(int columnIndex, bool ascending) {
+  //   if (columnIndex == 0) {
+  //     if (ascending) {
+  //       appointments.sort((a, b) => a.username!.compareTo(b.username!));
+  //     } else {
+  //       appointments.sort((a, b) => b.username!.compareTo(a.username!));
+  //     }
+  //   }
+  //   if (columnIndex == 3) {
+  //     if (ascending) {
+  //       appointments.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+  //     } else {
+  //       appointments.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+  //     }
+  //   }
+  // }
 
-  DataRow patientDataRow(User user, context) {
-    DateTime date = DateTime.parse(user.createdAt.toString());
+  DataRow appointmentDataRow(Appointment appointment, context) {
+    DateTime date = DateTime.parse(appointment.createdAt.toString());
+    List<String>? rays = [];
+    appointment.radiology!.forEach((e) {
+      Developer.log(e.name.toString());
+      rays.add(e.name.toString());
+    });
+
     return DataRow(
       cells: [
         DataCell(
@@ -139,34 +147,36 @@ class _PatientsTableState extends State<PatientsTable> {
                 backgroundColor: Colors
                     .primaries[Random().nextInt(Colors.primaries.length)]
                     .shade400,
-                child: Text(user.username!.substring(0, 2).toString()),
+                child: Text(
+                    appointment.patient!.username!.substring(0, 2).toString()),
               ),
               Container(
                 width: Responsive.isMobile(context)
                     ? MediaQuery.of(context).size.width * 0.2
                     : MediaQuery.of(context).size.width * 0.06,
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-                child: Text(user.username!),
+                child: Text(appointment.patient!.username!),
               ),
             ],
           ),
         ),
-        if (Responsive.isDesktop(context)) DataCell(Text(user.sex.toString())),
-        DataCell(Text(user.phone.toString())),
+        DataCell(Text(rays.join(", "))),
+        DataCell(Text(appointment.totalPrice.toString())),
         if (!Responsive.isMobile(context))
           DataCell(Text(
             "${date.year}/${date.month}/${date.day}",
             textAlign: TextAlign.center,
           )),
         if (Responsive.isDesktop(context))
-          DataCell(Text(user.notes.toString())),
+          DataCell(Text(appointment.notes.toString())),
         DataCell(Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5),
               child: IconButton(
                   onPressed: () {
-                    showEditUserDialog(context, user);
+                    // showEditAppointmentDialog(context, appointment);
                   },
                   icon: Icon(Icons.edit)),
             ),
@@ -184,7 +194,7 @@ class _PatientsTableState extends State<PatientsTable> {
                           Container(
                             margin: EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
-                              "Are you sure to delete patient (${user.username}) !!",
+                              "Are you sure to delete appointment of (${appointment.patient}) !!",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
@@ -196,24 +206,15 @@ class _PatientsTableState extends State<PatientsTable> {
                         label: 'Yes, Delete',
                         textColor: Colors.red,
                         onPressed: () async {
-                          String status = await Provider.of<PatientViewModel>(
-                                  context,
-                                  listen: false)
-                              .deletePatient(user, context);
+                          String status =
+                              await Provider.of<AppointmentViewModel>(context,
+                                      listen: false)
+                                  .deleteAppointment(appointment, context);
                         },
                       ),
                     ));
                   },
                   icon: Icon(Icons.delete_forever)),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.perm_contact_calendar_outlined,
-                    color: Colors.blue,
-                  )),
             ),
           ],
         )),
@@ -221,19 +222,18 @@ class _PatientsTableState extends State<PatientsTable> {
     );
   }
 
-  showEditUserDialog(context, User? user) {
-    showDialog<void>(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Edit Patient (${user!.username})'),
-            content: NewEditUserDialog(
-              type: "P",
-              isEditing: true,
-              user: user,
-            ),
-          );
-        });
-  }
+  // showEditAppointmentDialog(context, Appointment? appointment) {
+  //   showDialog<void>(
+  //       context: context,
+  //       barrierDismissible: true,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text('Edit Appointment of (${appointment!.patient!.username})'),
+  //           content: NewEditAppointmentDialog(
+  //             isEditing: true,
+  //             appointment: appointment,
+  //           ),
+  //         );
+  //       });
+  // }
 }

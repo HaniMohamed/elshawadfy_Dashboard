@@ -161,6 +161,7 @@ class _PatientsTableState extends State<PatientsTable> {
         if (Responsive.isDesktop(context))
           DataCell(Text(user.notes.toString())),
         DataCell(Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5),

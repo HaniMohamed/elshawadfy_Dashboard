@@ -4,6 +4,7 @@ import 'package:admin/shared/constants.dart';
 import 'package:admin/controllers/MenuController.dart';
 import 'package:admin/ui/screens/main/main_screen.dart';
 import 'package:admin/ui/screens/patients/pateints_screen.dart';
+import 'package:admin/view_model/appointment_view_model.dart';
 import 'package:admin/view_model/patient_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +17,9 @@ void main() {
     ),
     ChangeNotifierProvider(
       create: (context) => PatientViewModel(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => AppointmentViewModel(),
     ),
   ], child: MyApp()));
 }

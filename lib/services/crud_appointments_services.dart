@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:admin/models/appointment.dart';
-import 'package:admin/models/user.dart';
 import 'package:admin/shared/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,7 @@ class CRUDAppointmentsServices {
       );
       log(response.toString());
       appointments = List<Appointment>.from(
-          response.data.map((model) => User.fromJson(model)));
+          response.data.map((model) => Appointment.fromJson(model)));
       log(appointments[0].patient!.username.toString());
     } on DioError catch (e) {
       log("error in listAppointments => ${e.response}");

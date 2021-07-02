@@ -1,3 +1,5 @@
+import 'package:admin/models/user.dart';
+
 class Radiology {
   int? id;
   String? name;
@@ -6,7 +8,7 @@ class Radiology {
   String? notes;
   String? createdAt;
   String? updatedAt;
-  int? doctor;
+  User? doctor;
 
   Radiology(
       {this.id,
@@ -26,7 +28,7 @@ class Radiology {
     notes = json['notes'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    doctor = json['doctor'];
+    doctor = json['doctor'] != null ? new User.fromJson(json['doctor']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -37,7 +39,9 @@ class Radiology {
     data['notes'] = this.notes;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    data['doctor'] = this.doctor;
+    if (this.doctor != null) {
+      data['doctor'] = this.doctor!.toJson();
+    }
     return data;
   }
 }

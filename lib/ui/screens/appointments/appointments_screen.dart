@@ -7,7 +7,7 @@ import 'package:admin/ui/widgtes/header.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'components/patients_table.dart';
+import 'components/appointments_table.dart';
 import 'components/storage_details.dart';
 
 class AppointmentsScreen extends StatelessWidget {
@@ -47,7 +47,7 @@ class AppointmentsScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: defaultPadding),
-                      PatientsTable(),
+                      AppointmentsTable(),
                       if (Responsive.isMobile(context))
                         SizedBox(height: defaultPadding),
                       if (Responsive.isMobile(context)) StarageDetails(),

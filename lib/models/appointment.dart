@@ -33,6 +33,7 @@ class Appointment {
         ? new User.fromJson(json['supervisor'])
         : null;
     if (json['radiology'] != null) {
+      radiology = [];
       json['radiology'].forEach((v) {
         radiology!.add(new Radiology.fromJson(v));
       });
