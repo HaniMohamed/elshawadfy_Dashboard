@@ -16,11 +16,13 @@ class _SideMenuState extends State<SideMenu> {
   List<String> menuTitles = [
     "Dashboard",
     "Patients",
+    "Appointments",
   ];
 
   List<String> menuImages = [
     "assets/icons/menu_dashbord.svg",
     "assets/icons/patients.svg",
+    "assets/icons/appointment.svg",
   ];
 
   @override
