@@ -104,7 +104,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
           setState(() {
             Navigator.pop(context);
             Provider.of<MenuController>(context, listen: false)
-                .showPageIndex(2);
+                .showPageIndex(1);
           });
         } else {
           setState(() {

@@ -16,13 +16,13 @@ class SideMenu extends StatefulWidget {
 class _SideMenuState extends State<SideMenu> {
   int _selectedIndex = 0;
   List<String> menuTitles = [
-    "Dashboard",
+    // "Dashboard",
     "Patients",
     "Appointments",
   ];
 
   List<String> menuImages = [
-    "assets/icons/menu_dashbord.svg",
+    // "assets/icons/menu_dashbord.svg",
     "assets/icons/patients.svg",
     "assets/icons/appointment.svg",
   ];

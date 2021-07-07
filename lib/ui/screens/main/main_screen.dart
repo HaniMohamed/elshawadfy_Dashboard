@@ -20,7 +20,6 @@ class _MainScreenState extends State<MainScreen> {
   int _drawerIndex = 0;
   List<Widget> bodyWidgets = [
     // DashboardScreen(),
-    Container(),
     PatientsScreen(),
     AppointmentsScreen(),
   ];

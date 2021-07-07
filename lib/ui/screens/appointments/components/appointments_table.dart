@@ -10,6 +10,9 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/shared/constants.dart';
 import 'package:provider/provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class AppointmentsTable extends StatefulWidget {
   const AppointmentsTable({
@@ -210,10 +213,129 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                   },
                   icon: Icon(Icons.delete_forever)),
             ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: IconButton(
+                  onPressed: () {
+                    printing(appointment);
+                  },
+                  icon: Icon(
+                    Icons.print,
+                    color: Colors.blue,
+                  )),
+            ),
           ],
         )),
       ],
     );
+  }
+
+  printing(Appointment appointment) async {
+    Developer.log("Heellooooooo Dr. ${appointment.supervisor!.firstName}");
+    DateTime date = DateTime.parse(appointment.createdAt.toString());
+    List<String>? rays = [];
+    appointment.radiology!.forEach((e) {
+      Developer.log(e.name.toString());
+      rays.add(e.name.toString());
+    });
+    final doc = pw.Document();
+
+    doc.addPage(pw.Page(
+        pageFormat: PdfPageFormat.a6,
+        build: (pw.Context context) {
+          return pw.Column(mainAxisSize: pw.MainAxisSize.min, children: [
+            pw.Container(
+                margin: pw.EdgeInsets.all(10),
+                child: pw.Table(
+                    defaultColumnWidth: pw.FixedColumnWidth(120.0),
+                    border: pw.TableBorder.all(
+                        color: PdfColor.fromHex("#000000"),
+                        style: pw.BorderStyle.solid,
+                        width: 2),
+                    children: [
+                      pw.TableRow(children: [
+                        pw.Column(children: [
+                          pw.Text('Name:',
+                              style: pw.TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: pw.FontWeight.bold))
+                        ]),
+                        pw.Column(children: [
+                          pw.Container(
+                              padding: pw.EdgeInsets.all(5),
+                              child: pw.Text(
+                                  '${appointment.patient!.firstName} ${appointment.patient!.lastName}',
+                                  textAlign: pw.TextAlign.center,
+                                  style: pw.TextStyle(fontSize: 16.0)))
+                        ]),
+                      ]),
+                      pw.TableRow(children: [
+                        pw.Column(children: [
+                          pw.Text('REF.PRO:',
+                              style: pw.TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: pw.FontWeight.bold))
+                        ]),
+                        pw.Column(children: [
+                          pw.Container(
+                              padding: pw.EdgeInsets.all(5),
+                              child: pw.Text(
+                                  'Dr. ${appointment.supervisor!.username}',
+                                  textAlign: pw.TextAlign.center,
+                                  style: pw.TextStyle(fontSize: 16.0)))
+                        ]),
+                      ]),
+                      pw.TableRow(children: [
+                        pw.Column(children: [
+                          pw.Text('Date:',
+                              style: pw.TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: pw.FontWeight.bold))
+                        ]),
+                        pw.Column(children: [
+                          pw.Container(
+                              padding: pw.EdgeInsets.all(5),
+                              child: pw.Text(
+                                  "${date.year}/${date.month}/${date.day}",
+                                  textAlign: pw.TextAlign.center,
+                                  style: pw.TextStyle(fontSize: 16.0)))
+                        ]),
+                      ]),
+                      pw.TableRow(children: [
+                        pw.Column(children: [
+                          pw.Text('Scan:',
+                              style: pw.TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: pw.FontWeight.bold))
+                        ]),
+                        pw.Column(children: [
+                          pw.Container(
+                              padding: pw.EdgeInsets.all(5),
+                              child: pw.Text(rays.join(", "),
+                                  textAlign: pw.TextAlign.center,
+                                  style: pw.TextStyle(fontSize: 16.0)))
+                        ]),
+                      ]),
+                      pw.TableRow(children: [
+                        pw.Column(children: [
+                          pw.Text('Age:',
+                              style: pw.TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: pw.FontWeight.bold))
+                        ]),
+                        pw.Column(children: [
+                          pw.Container(
+                              padding: pw.EdgeInsets.all(5),
+                              child: pw.Text("${appointment.patient!.age}",
+                                  textAlign: pw.TextAlign.center,
+                                  style: pw.TextStyle(fontSize: 16.0)))
+                        ]),
+                      ]),
+                    ]))
+          ]);
+        }));
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => doc.save());
   }
 
   showEditAppointmentDialog(context, Appointment? appointment) {
