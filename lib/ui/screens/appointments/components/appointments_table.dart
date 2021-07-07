@@ -1,18 +1,17 @@
 import 'dart:developer' as Developer;
 import 'dart:math';
+
 import 'package:admin/models/appointment.dart';
-import 'package:admin/models/user.dart';
 import 'package:admin/responsive.dart';
+import 'package:admin/shared/constants.dart';
 import 'package:admin/ui/widgtes/dialogs/new_edit_appointment_dialog.dart';
-import 'package:admin/ui/widgtes/dialogs/new_edit_user_dialog.dart';
 import 'package:admin/view_model/appointment_view_model.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:admin/shared/constants.dart';
-import 'package:provider/provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:provider/provider.dart';
 
 class AppointmentsTable extends StatefulWidget {
   const AppointmentsTable({
@@ -68,8 +67,8 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                       return DataTable2(
                         columnSpacing: defaultPadding,
                         sortAscending: sort,
-                        sortColumnIndex: sortIndex,
-                        dataRowHeight: 80,
+                        // sortColumnIndex: sortIndex,
+                        dataRowHeight: Responsive.isMobile(context) ? 120 : 80,
                         columns: [
                           DataColumn(
                             label: Text("Patient"),
@@ -77,9 +76,10 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                           DataColumn(
                             label: Text("Rays"),
                           ),
-                          DataColumn(
-                            label: Text("Tot. Price"),
-                          ),
+                          if (!Responsive.isMobile(context))
+                            DataColumn(
+                              label: Text("Tot. Price"),
+                            ),
                           if (!Responsive.isMobile(context))
                             DataColumn(
                               label: Text("Date"),
@@ -158,7 +158,8 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
           ),
         ),
         DataCell(Text(rays.join(", "))),
-        DataCell(Text(appointment.totalPrice.toString())),
+        if (!Responsive.isMobile(context))
+          DataCell(Text(appointment.totalPrice.toString())),
         if (!Responsive.isMobile(context))
           DataCell(Text(
             "${date.year}/${date.month}/${date.day}",
@@ -166,68 +167,79 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
           )),
         if (Responsive.isDesktop(context))
           DataCell(Text(appointment.notes.toString())),
-        DataCell(Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: IconButton(
-                  onPressed: () {
-                    showEditAppointmentDialog(context, appointment);
-                  },
-                  icon: Icon(Icons.edit)),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: IconButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Row(
-                        children: [
-                          Icon(
-                            Icons.delete_forever_outlined,
-                            color: Colors.redAccent,
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(
-                              "Are you sure to delete appointment of (${appointment.patient!.username}) !!",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                      action: SnackBarAction(
-                        label: 'Yes, Delete',
-                        textColor: Colors.red,
-                        onPressed: () async {
-                          String status =
-                              await Provider.of<AppointmentViewModel>(context,
-                                      listen: false)
-                                  .deleteAppointment(appointment, context);
-                        },
-                      ),
-                    ));
-                  },
-                  icon: Icon(Icons.delete_forever)),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: IconButton(
-                  onPressed: () {
-                    printing(appointment);
-                  },
-                  icon: Icon(
-                    Icons.print,
-                    color: Colors.blue,
-                  )),
-            ),
-          ],
-        )),
+        DataCell(Responsive.isMobile(context)
+            ? Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: actionButtons(appointment),
+                ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: actionButtons(appointment),
+              )),
       ],
     );
+  }
+
+  List<Widget> actionButtons(appointment) {
+    return [
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: IconButton(
+            onPressed: () {
+              showEditAppointmentDialog(context, appointment);
+            },
+            icon: Icon(Icons.edit)),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: IconButton(
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Row(
+                  children: [
+                    Icon(
+                      Icons.delete_forever_outlined,
+                      color: Colors.redAccent,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        "Are you sure to delete appointment of (${appointment.patient!.username}) !!",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                action: SnackBarAction(
+                  label: 'Yes, Delete',
+                  textColor: Colors.red,
+                  onPressed: () async {
+                    String status = await Provider.of<AppointmentViewModel>(
+                            context,
+                            listen: false)
+                        .deleteAppointment(appointment, context);
+                  },
+                ),
+              ));
+            },
+            icon: Icon(Icons.delete_forever)),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: IconButton(
+            onPressed: () {
+              printing(appointment);
+            },
+            icon: Icon(
+              Icons.print,
+              color: Colors.blue,
+            )),
+      ),
+    ];
   }
 
   printing(Appointment appointment) async {

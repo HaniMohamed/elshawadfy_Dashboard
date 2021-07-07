@@ -1,13 +1,13 @@
 import 'dart:math';
+
 import 'package:admin/models/user.dart';
 import 'package:admin/responsive.dart';
-import 'package:admin/services/crud_users_services.dart';
+import 'package:admin/shared/constants.dart';
 import 'package:admin/ui/widgtes/dialogs/new_edit_appointment_dialog.dart';
 import 'package:admin/ui/widgtes/dialogs/new_edit_user_dialog.dart';
 import 'package:admin/view_model/patient_view_model.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:admin/shared/constants.dart';
 import 'package:provider/provider.dart';
 
 class PatientsTable extends StatefulWidget {
@@ -64,7 +64,7 @@ class _PatientsTableState extends State<PatientsTable> {
                         columnSpacing: defaultPadding,
                         sortAscending: sort,
                         sortColumnIndex: sortIndex,
-                        dataRowHeight: 80,
+                        dataRowHeight: Responsive.isMobile(context) ? 120 : 80,
                         columns: [
                           DataColumn(
                             label: Text("Name"),
@@ -161,68 +161,78 @@ class _PatientsTableState extends State<PatientsTable> {
           )),
         if (Responsive.isDesktop(context))
           DataCell(Text(user.notes.toString())),
-        DataCell(Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: IconButton(
-                  onPressed: () {
-                    showEditUserDialog(context, user);
-                  },
-                  icon: Icon(Icons.edit)),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: IconButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Row(
-                        children: [
-                          Icon(
-                            Icons.delete_forever_outlined,
-                            color: Colors.redAccent,
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(
-                              "Are you sure to delete patient (${user.username}) !!",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                      action: SnackBarAction(
-                        label: 'Yes, Delete',
-                        textColor: Colors.red,
-                        onPressed: () async {
-                          String status = await Provider.of<PatientViewModel>(
-                                  context,
-                                  listen: false)
-                              .deletePatient(user, context);
-                        },
-                      ),
-                    ));
-                  },
-                  icon: Icon(Icons.delete_forever)),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: IconButton(
-                  onPressed: () {
-                    showNewAppointmentDialog(context, user);
-                  },
-                  icon: Icon(
-                    Icons.perm_contact_calendar_outlined,
-                    color: Colors.blue,
-                  )),
-            ),
-          ],
-        )),
+        DataCell(Responsive.isMobile(context)
+            ? Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: actionButtons(user),
+                ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: actionButtons(user),
+              )),
       ],
     );
+  }
+
+  List<Widget> actionButtons(user) {
+    return [
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: IconButton(
+            onPressed: () {
+              showEditUserDialog(context, user);
+            },
+            icon: Icon(Icons.edit)),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: IconButton(
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Row(
+                  children: [
+                    Icon(
+                      Icons.delete_forever_outlined,
+                      color: Colors.redAccent,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        "Are you sure to delete patient (${user.username}) !!",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                action: SnackBarAction(
+                  label: 'Yes, Delete',
+                  textColor: Colors.red,
+                  onPressed: () async {
+                    String status = await Provider.of<PatientViewModel>(context,
+                            listen: false)
+                        .deletePatient(user, context);
+                  },
+                ),
+              ));
+            },
+            icon: Icon(Icons.delete_forever)),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: IconButton(
+            onPressed: () {
+              showNewAppointmentDialog(context, user);
+            },
+            icon: Icon(
+              Icons.perm_contact_calendar_outlined,
+              color: Colors.blue,
+            )),
+      ),
+    ];
   }
 
   showEditUserDialog(context, User? user) {
