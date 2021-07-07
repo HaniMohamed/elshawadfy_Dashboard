@@ -51,6 +51,9 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
       _raysItems = rays
           .map((ray) => MultiSelectItem<Radiology>(ray, ray.name!))
           .toList();
+      if (widget.isEditing) {
+        selectedRays = widget.appointment!.radiology!;
+      }
       loadingRays = false;
     });
   }

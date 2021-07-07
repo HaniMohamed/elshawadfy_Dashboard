@@ -19,7 +19,8 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _drawerIndex = 0;
   List<Widget> bodyWidgets = [
-    DashboardScreen(),
+    // DashboardScreen(),
+    Container(),
     PatientsScreen(),
     AppointmentsScreen(),
   ];
