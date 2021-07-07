@@ -93,7 +93,7 @@ BEGIN
             VALUE "FileDescription", "A new Flutter project." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "flutter_admin_portal" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2021 FAP. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2021 Proga. All rights reserved." "\0"
             VALUE "OriginalFilename", "fdp.exe" "\0"
             VALUE "ProductName", "flutter_admin_portal" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

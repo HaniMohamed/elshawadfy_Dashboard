@@ -34,6 +34,7 @@ bool FlutterWindow::OnCreate() {
 void FlutterWindow::OnDestroy() {
   if (flutter_controller_) {
     run_loop_->UnregisterFlutterInstance(flutter_controller_->engine());
+
     flutter_controller_ = nullptr;
   }
 
