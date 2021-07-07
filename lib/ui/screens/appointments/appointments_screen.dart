@@ -29,23 +29,22 @@ class AppointmentsScreen extends StatelessWidget {
                   flex: 5,
                   child: Column(
                     children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: ElevatedButton.icon(
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: defaultPadding * 1.5,
-                              vertical: defaultPadding /
-                                  (Responsive.isMobile(context) ? 2 : 1),
-                            ),
-                          ),
-                          onPressed: () {
-                            showAddUserDialog(context);
-                          },
-                          icon: Icon(Icons.add),
-                          label: Text("Add New"),
-                        ),
-                      ),
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: ElevatedButton.icon(
+                      //     style: TextButton.styleFrom(
+                      //       padding: EdgeInsets.symmetric(
+                      //         horizontal: defaultPadding * 1.5,
+                      //         vertical: defaultPadding /
+                      //             (Responsive.isMobile(context) ? 2 : 1),
+                      //       ),
+                      //     ),
+                      //     onPressed: () {
+                      //     },
+                      //     icon: Icon(Icons.add),
+                      //     label: Text("Add New"),
+                      //   ),
+                      // ),
                       SizedBox(height: defaultPadding),
                       AppointmentsTable(),
                       if (Responsive.isMobile(context))
@@ -68,19 +67,5 @@ class AppointmentsScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  showAddUserDialog(context) {
-    showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Add new Appointment'),
-            content: NewEditUserDialog(
-              type: "P",
-            ),
-          );
-        });
   }
 }

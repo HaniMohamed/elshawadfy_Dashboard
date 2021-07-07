@@ -1,6 +1,8 @@
+import 'package:admin/controllers/MenuController.dart';
 import 'package:admin/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class SideMenu extends StatefulWidget {
   Function? function;
@@ -37,15 +39,19 @@ class _SideMenuState extends State<SideMenu> {
             child: ListView.builder(
                 itemCount: menuTitles.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return DrawerListTile(
-                    title: menuTitles[index],
-                    svgSrc: menuImages[index],
-                    isSelected: index == _selectedIndex,
-                    press: () {
-                      widget.function!(index);
-                      setState(() {
-                        _selectedIndex = index;
-                      });
+                  return Consumer<MenuController>(
+                    builder: (context, menu, child) {
+                      return DrawerListTile(
+                        title: menuTitles[index],
+                        svgSrc: menuImages[index],
+                        isSelected: index == menu.indexPage,
+                        press: () {
+                          widget.function!(index);
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                        },
+                      );
                     },
                   );
                 }),

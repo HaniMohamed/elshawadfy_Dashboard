@@ -61,7 +61,9 @@ class _NewEditUserDialogState extends State<NewEditUserDialog> {
         if (result == "success") {
           Navigator.pop(context);
         } else {
-          _errorText = result;
+          setState(() {
+            _errorText = result;
+          });
         }
       });
     }

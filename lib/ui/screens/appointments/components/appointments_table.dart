@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:admin/models/appointment.dart';
 import 'package:admin/models/user.dart';
 import 'package:admin/responsive.dart';
+import 'package:admin/ui/widgtes/dialogs/new_edit_appointment_dialog.dart';
 import 'package:admin/ui/widgtes/dialogs/new_edit_user_dialog.dart';
 import 'package:admin/view_model/appointment_view_model.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -42,7 +43,7 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
   }
 
   bool sort = false;
-  int sortIndex = 0;
+  int sortIndex = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +70,6 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                         columns: [
                           DataColumn(
                             label: Text("Patient"),
-                            onSort: (columnIndex, ascending) {
-                              setState(() {
-                                sort = !sort;
-                                sortIndex = columnIndex;
-                              });
-                              // onSortColumn(columnIndex, ascending);
-                            },
                           ),
                           DataColumn(
                             label: Text("Rays"),
@@ -86,6 +80,13 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                           if (!Responsive.isMobile(context))
                             DataColumn(
                               label: Text("Date"),
+                              onSort: (columnIndex, ascending) {
+                                setState(() {
+                                  sort = !sort;
+                                  sortIndex = columnIndex;
+                                });
+                                onSortColumn(columnIndex, ascending);
+                              },
                             ),
                           if (Responsive.isDesktop(context))
                             DataColumn(
@@ -113,22 +114,15 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
     );
   }
 
-  // onSortColumn(int columnIndex, bool ascending) {
-  //   if (columnIndex == 0) {
-  //     if (ascending) {
-  //       appointments.sort((a, b) => a.username!.compareTo(b.username!));
-  //     } else {
-  //       appointments.sort((a, b) => b.username!.compareTo(a.username!));
-  //     }
-  //   }
-  //   if (columnIndex == 3) {
-  //     if (ascending) {
-  //       appointments.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
-  //     } else {
-  //       appointments.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
-  //     }
-  //   }
-  // }
+  onSortColumn(int columnIndex, bool ascending) {
+    if (columnIndex == 3) {
+      if (ascending) {
+        appointments.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+      } else {
+        appointments.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+      }
+    }
+  }
 
   DataRow appointmentDataRow(Appointment appointment, context) {
     DateTime date = DateTime.parse(appointment.createdAt.toString());
@@ -176,7 +170,7 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
               padding: EdgeInsets.symmetric(horizontal: 5),
               child: IconButton(
                   onPressed: () {
-                    // showEditAppointmentDialog(context, appointment);
+                    showEditAppointmentDialog(context, appointment);
                   },
                   icon: Icon(Icons.edit)),
             ),
@@ -194,7 +188,7 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                           Container(
                             margin: EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
-                              "Are you sure to delete appointment of (${appointment.patient}) !!",
+                              "Are you sure to delete appointment of (${appointment.patient!.username}) !!",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
@@ -222,18 +216,19 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
     );
   }
 
-  // showEditAppointmentDialog(context, Appointment? appointment) {
-  //   showDialog<void>(
-  //       context: context,
-  //       barrierDismissible: true,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Edit Appointment of (${appointment!.patient!.username})'),
-  //           content: NewEditAppointmentDialog(
-  //             isEditing: true,
-  //             appointment: appointment,
-  //           ),
-  //         );
-  //       });
-  // }
+  showEditAppointmentDialog(context, Appointment? appointment) {
+    showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title:
+                Text('New Appointment for (${appointment!.patient!.username})'),
+            content: NewEditAppointmentDialog(
+              isEditing: true,
+              appointment: appointment,
+            ),
+          );
+        });
+  }
 }

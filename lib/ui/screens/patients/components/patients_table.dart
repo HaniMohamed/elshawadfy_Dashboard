@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:admin/models/user.dart';
 import 'package:admin/responsive.dart';
 import 'package:admin/services/crud_users_services.dart';
+import 'package:admin/ui/widgtes/dialogs/new_edit_appointment_dialog.dart';
 import 'package:admin/ui/widgtes/dialogs/new_edit_user_dialog.dart';
 import 'package:admin/view_model/patient_view_model.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -210,7 +211,9 @@ class _PatientsTableState extends State<PatientsTable> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5),
               child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showNewAppointmentDialog(context, user);
+                  },
                   icon: Icon(
                     Icons.perm_contact_calendar_outlined,
                     color: Colors.blue,
@@ -233,6 +236,21 @@ class _PatientsTableState extends State<PatientsTable> {
               type: "P",
               isEditing: true,
               user: user,
+            ),
+          );
+        });
+  }
+
+  showNewAppointmentDialog(context, User? user) {
+    showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('New Appointment for (${user!.username})'),
+            content: NewEditAppointmentDialog(
+              isEditing: false,
+              patient: user,
             ),
           );
         });

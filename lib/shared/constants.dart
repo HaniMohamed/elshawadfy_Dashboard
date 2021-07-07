@@ -20,4 +20,9 @@ const deleteUserAPI = "api/v1/users/delete/";
 const listAppointmentsAPI = "api/v1/examination";
 const newAppointmentAPI = "api/v1/examination/new";
 const editAppointmentAPI = "api/v1/examination/update/";
-const deleteAppointmentAPI = "api/v1/users/delete/";
+const deleteAppointmentAPI = "api/v1/examination/delete/";
+
+const listRaysAPI = "api/v1/radiology";
+const newRaysAPI = "api/v1/radiology/new";
+const editRaysAPI = "api/v1/radiology/update/";
+const deleteRaysAPI = "api/v1/radiology/delete/";

@@ -3,6 +3,9 @@ import 'package:admin/models/user.dart';
 
 class Appointment {
   int? id;
+  int? patientID;
+  int? supervisorID;
+  List? radiologyIDs;
   String? notes;
   String? totalPrice;
   String? createdAt;
@@ -13,6 +16,9 @@ class Appointment {
 
   Appointment(
       {this.id,
+      this.patientID,
+      this.supervisorID,
+      this.radiologyIDs,
       this.notes,
       this.totalPrice,
       this.createdAt,
@@ -44,17 +50,11 @@ class Appointment {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['notes'] = this.notes;
     data['total_price'] = this.totalPrice;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    if (this.patient != null) {
-      data['patient'] = this.patient!.toJson();
-    }
-    if (this.supervisor != null) {
-      data['supervisor'] = this.supervisor!.toJson();
-    }
-    if (this.radiology != null) {
-      data['radiology'] = this.radiology!.map((v) => v.toJson()).toList();
-    }
+
+    data['patient'] = this.patientID!;
+    data['supervisor'] = this.supervisorID!;
+    data['radiology'] = this.radiologyIDs!;
+
     return data;
   }
 }

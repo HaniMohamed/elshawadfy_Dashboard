@@ -1,50 +1,49 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:admin/models/appointment.dart';
+import 'package:admin/models/radiology.dart';
 import 'package:admin/shared/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CRUDAppointmentsServices {
-  Future getAppointments(context) async {
+class CRUDRaysServices {
+  Future getRays(context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<Appointment> appointments = [];
+    List<Radiology> rays = [];
 
     try {
       Response response = await Dio().get(
-        '$domainName$listAppointmentsAPI',
+        '$domainName$listRaysAPI',
         options: Options(headers: {
           HttpHeaders.acceptHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer ${prefs.getString("token")}"
         }),
       );
       log(response.toString());
-      appointments = List<Appointment>.from(
-          response.data.map((model) => Appointment.fromJson(model)));
-      log(appointments[0].patient!.username.toString());
+      rays = List<Radiology>.from(
+          response.data.map((model) => Radiology.fromJson(model)));
+      log(rays[0].name.toString());
     } on DioError catch (e) {
-      log("error in listAppointments => ${e.response}");
+      log("error in listRays => ${e.response}");
       if (e.response!.statusCode == 403) {
         prefs.clear();
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       }
     }
-    return appointments;
+    return rays;
   }
 
-  Future newAppointment(Appointment? appointment, context) async {
+  Future newRays(Radiology? ray, context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Response response;
 
     FormData formData;
-    formData = FormData.fromMap(appointment!.toJson());
-    log(formData.fields.join("\n"));
+    formData = FormData.fromMap(ray!.toJson());
 
     try {
       response = await Dio().post(
-        "$domainName$newAppointmentAPI",
+        "$domainName$newRaysAPI",
         options: Options(headers: {
           HttpHeaders.acceptHeader: "application/json",
           HttpHeaders.authorizationHeader: 'Bearer ${prefs.getString("token")}',
@@ -58,7 +57,7 @@ class CRUDAppointmentsServices {
       } else
         return response.data;
     } on DioError catch (e) {
-      log("error in createAppointment => ${e.response!.data}");
+      log("error in createRays => ${e.response!.data}");
       if (e.response!.statusCode == 403) {
         prefs.clear();
         Navigator.of(context)
@@ -68,16 +67,16 @@ class CRUDAppointmentsServices {
     }
   }
 
-  Future editAppointment(Appointment? appointment, context) async {
+  Future editRays(Radiology? ray, context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Response response;
 
     FormData formData;
-    formData = FormData.fromMap(appointment!.toJson());
+    formData = FormData.fromMap(ray!.toJson());
 
     try {
       response = await Dio().put(
-        "$domainName$editAppointmentAPI${appointment.id}",
+        "$domainName$editRaysAPI${ray.id}",
         options: Options(headers: {
           HttpHeaders.acceptHeader: "application/json",
           HttpHeaders.authorizationHeader: 'Bearer ${prefs.getString("token")}',
@@ -91,7 +90,7 @@ class CRUDAppointmentsServices {
       } else
         return response.data;
     } on DioError catch (e) {
-      log("error in editingAppointment => ${e.response!.data}");
+      log("error in editingRays => ${e.response!.data}");
       if (e.response!.statusCode == 403) {
         prefs.clear();
         Navigator.of(context)
@@ -101,13 +100,13 @@ class CRUDAppointmentsServices {
     }
   }
 
-  Future deleteAppointment(Appointment? appointment, context) async {
+  Future deleteRays(Radiology? ray, context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Response response;
 
     try {
       response = await Dio().delete(
-        "$domainName$deleteAppointmentAPI${appointment!.id}",
+        "$domainName$deleteRaysAPI${ray!.id}",
         options: Options(headers: {
           HttpHeaders.acceptHeader: "application/json",
           HttpHeaders.authorizationHeader: 'Bearer ${prefs.getString("token")}',
@@ -122,7 +121,7 @@ class CRUDAppointmentsServices {
       } else
         return response.data;
     } on DioError catch (e) {
-      log("error in deletingAppointment => ${e.response!.data}");
+      log("error in deletingRays => ${e.response!.data}");
       if (e.response!.statusCode == 403) {
         prefs.clear();
         Navigator.of(context)

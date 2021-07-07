@@ -36,9 +36,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   changeBody(int index) {
-    setState(() {
-      _drawerIndex = index;
-    });
+    Provider.of<MenuController>(context, listen: false).showPageIndex(index);
   }
 
   @override
@@ -63,11 +61,15 @@ class _MainScreenState extends State<MainScreen> {
                 // and it takes 1/6 part of the screen
                 child: SideMenu(changeBody),
               ),
-            Expanded(
-              // It takes 5/6 part of the screen
-              flex: 5,
-              child: bodyWidgets[_drawerIndex],
-            ),
+            Consumer<MenuController>(
+              builder: (context, menu, child) {
+                return Expanded(
+                  // It takes 5/6 part of the screen
+                  flex: 5,
+                  child: bodyWidgets[menu.indexPage],
+                );
+              },
+            )
           ],
         ),
       ),
