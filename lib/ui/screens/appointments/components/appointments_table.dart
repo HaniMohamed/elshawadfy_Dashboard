@@ -245,9 +245,8 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
         build: (pw.Context context) {
           return pw.Column(mainAxisSize: pw.MainAxisSize.min, children: [
             pw.Container(
-                margin: pw.EdgeInsets.all(10),
+                margin: pw.EdgeInsets.all(5),
                 child: pw.Table(
-                    defaultColumnWidth: pw.FixedColumnWidth(120.0),
                     border: pw.TableBorder.all(
                         color: PdfColor.fromHex("#000000"),
                         style: pw.BorderStyle.solid,
