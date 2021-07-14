@@ -254,6 +254,7 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
 
     doc.addPage(pw.Page(
         pageFormat: PdfPageFormat.a6,
+        orientation: pw.PageOrientation.landscape,
         build: (pw.Context context) {
           return pw.Column(mainAxisSize: pw.MainAxisSize.min, children: [
             pw.Container(
