@@ -67,7 +67,7 @@ class _PatientsTableState extends State<PatientsTable> {
                         dataRowHeight: Responsive.isMobile(context) ? 120 : 80,
                         columns: [
                           DataColumn(
-                            label: Text("Name"),
+                            label: Center(child: Text("Name")),
                             onSort: (columnIndex, ascending) {
                               setState(() {
                                 sort = !sort;
@@ -76,28 +76,23 @@ class _PatientsTableState extends State<PatientsTable> {
                               onSortColumn(columnIndex, ascending);
                             },
                           ),
-                          if (Responsive.isDesktop(context))
-                            DataColumn(
-                              label: Text("Sex"),
-                            ),
+                          // if (Responsive.isDesktop(context))
+                          //   DataColumn(
+                          //     label: Text("Sex"),
+                          //   ),
                           DataColumn(
-                            label: Text("Phone"),
+                            label: Center(child: Text("Phone")),
                           ),
                           if (!Responsive.isMobile(context))
                             DataColumn(
-                              label: Text("Date"),
+                              label: Center(child: Text("Date")),
                             ),
                           if (Responsive.isDesktop(context))
                             DataColumn(
-                              label: Text("Notes"),
+                              label: Center(child: Text("Notes")),
                             ),
                           DataColumn(
-                            label: Row(
-                              children: [
-                                Text("Actions"),
-                              ],
-                              mainAxisAlignment: MainAxisAlignment.center,
-                            ),
+                            label: Center(child: Text("Actions")),
                           ),
                         ],
                         rows: patientModel.users
@@ -135,6 +130,7 @@ class _PatientsTableState extends State<PatientsTable> {
       cells: [
         DataCell(
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
                 backgroundColor: Colors
@@ -152,24 +148,28 @@ class _PatientsTableState extends State<PatientsTable> {
             ],
           ),
         ),
-        if (Responsive.isDesktop(context)) DataCell(Text(user.sex.toString())),
-        DataCell(Text(user.phone.toString())),
+        // if (Responsive.isDesktop(context)) DataCell(Text(user.sex.toString())),
+        DataCell(Center(child: Text(user.phone.toString()))),
         if (!Responsive.isMobile(context))
-          DataCell(Text(
-            "${date.year}/${date.month}/${date.day}",
-            textAlign: TextAlign.center,
+          DataCell(Center(
+            child: Text(
+              "${date.year}/${date.month}/${date.day}",
+              textAlign: TextAlign.center,
+            ),
           )),
         if (Responsive.isDesktop(context))
-          DataCell(Text(user.notes.toString())),
+          DataCell(Center(child: Text(user.notes.toString()))),
         DataCell(Responsive.isMobile(context)
             ? Center(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: actionButtons(user),
                 ),
               )
             : Row(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: actionButtons(user),
               )),
