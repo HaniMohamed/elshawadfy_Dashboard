@@ -25,7 +25,7 @@ class LeftSide extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                      width: 120, child: Image.asset('assets/images/logo.png'))
+                      width: 200, child: Image.asset('assets/images/logo.png'))
                 ],
               ),
               Expanded(child: Container()),

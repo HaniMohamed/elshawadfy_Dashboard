@@ -1,7 +1,6 @@
 import 'package:admin/responsive.dart';
-import 'package:admin/shared/constants.dart';
-import 'package:admin/ui/screens/main/main_screen.dart';
 import 'package:admin/services/login_service.dart';
+import 'package:admin/shared/constants.dart';
 import 'package:flutter/material.dart';
 
 class RightSide extends StatefulWidget {
@@ -35,8 +34,8 @@ class _RightSideState extends State<RightSide> {
         isLoading = false;
       });
       if (result == "success") {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            '/', (Route<dynamic> route) => false);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       } else {
         setState(() {
           errorText = result;
@@ -51,7 +50,7 @@ class _RightSideState extends State<RightSide> {
       flex: Responsive.isMobile(context) ? 4 : 3,
       child: Container(
         padding: EdgeInsets.all(30),
-        color: Colors.white,
+        // color: Colors.grey.shade800,
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -73,9 +72,10 @@ class _RightSideState extends State<RightSide> {
                     Text(
                       'Sign in',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: MediaQuery.of(context).size.width * 0.03,
-                          color: Colors.black),
+                        fontWeight: FontWeight.bold,
+                        fontSize: MediaQuery.of(context).size.width * 0.03,
+                        // color: Colors.black,
+                      ),
                     ),
                   ],
                 ),
@@ -96,8 +96,11 @@ class _RightSideState extends State<RightSide> {
                     style: TextStyle(color: primaryColor),
                     decoration: InputDecoration(
                       labelText: 'Username',
-                      icon: Image.asset('assets/images/user.png'),
-                      labelStyle: TextStyle(color: secondaryColor),
+                      icon: Icon(
+                        Icons.person,
+                        color: Colors.greenAccent,
+                      ),
+                      // labelStyle: TextStyle(color: secondaryColor),
 
                       // prefix: Image.asset('images/user.png'),
                       // prefixIcon: Icon(Icons.person),
@@ -119,8 +122,11 @@ class _RightSideState extends State<RightSide> {
                     style: TextStyle(color: primaryColor),
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: TextStyle(color: secondaryColor),
-                      icon: Image.asset('assets/images/closed-lock.png'),
+                      // labelStyle: TextStyle(color: secondaryColor),
+                      icon: Icon(
+                        Icons.security,
+                        color: Colors.greenAccent,
+                      ),
                       // prefix: Image.asset('images/closed-lock.png'),
                       // prefixIcon: Icon(Icons.person),
                       border: new OutlineInputBorder(
