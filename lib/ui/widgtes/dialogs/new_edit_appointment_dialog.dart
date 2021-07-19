@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:admin/controllers/MenuController.dart';
 import 'package:admin/models/appointment.dart';
 import 'package:admin/models/radiology.dart';
@@ -7,11 +5,10 @@ import 'package:admin/models/user.dart';
 import 'package:admin/services/crud_rays_services.dart';
 import 'package:admin/services/crud_users_services.dart';
 import 'package:admin/view_model/appointment_view_model.dart';
-import 'package:admin/view_model/patient_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:provider/provider.dart';
 
 class NewEditAppointmentDialog extends StatefulWidget {
   Appointment? appointment;
@@ -28,7 +25,7 @@ class NewEditAppointmentDialog extends StatefulWidget {
 
 class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController patientNameController = TextEditingController();
   TextEditingController notesController = TextEditingController();
   List<User> doctors = [];
   List<Radiology> rays = [];
@@ -126,12 +123,15 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
     getRays();
     if (widget.isEditing) {
       setState(() {
-        usernameController.text = widget.appointment!.patient!.username!;
+        patientNameController.text = widget.appointment!.patient!.firstName! +
+            " " +
+            widget.appointment!.patient!.lastName!;
         notesController.text = widget.appointment!.notes ?? "";
       });
     } else {
       setState(() {
-        usernameController.text = widget.patient!.username!;
+        patientNameController.text =
+            widget.patient!.firstName! + " " + widget.patient!.lastName!;
       });
     }
   }
@@ -158,11 +158,11 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextFormField(
-                    controller: usernameController,
+                    controller: patientNameController,
                     enabled: false,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      labelText: 'Patient Username',
+                      labelText: 'Patient name',
                       icon: Icon(Icons.person),
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.grey)),
@@ -260,7 +260,8 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                                       .map<DropdownMenuItem<String>>((value) {
                                     return DropdownMenuItem<String>(
                                       value: value.username,
-                                      child: Text(value.username!),
+                                      child: Text(
+                                          "${value.firstName} ${value.lastName}"),
                                     );
                                   }).toList(),
                                 ),

@@ -8,6 +8,7 @@ import 'package:admin/ui/widgtes/dialogs/new_edit_appointment_dialog.dart';
 import 'package:admin/view_model/appointment_view_model.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -144,15 +145,18 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                 backgroundColor: Colors
                     .primaries[Random().nextInt(Colors.primaries.length)]
                     .shade400,
-                child: Text(
-                    appointment.patient!.username!.substring(0, 2).toString()),
+                child: Text(appointment.patient!.firstName!
+                        .substring(0, 1)
+                        .toString() +
+                    appointment.patient!.lastName!.substring(0, 1).toString()),
               ),
               Container(
                 width: Responsive.isMobile(context)
                     ? MediaQuery.of(context).size.width * 0.2
                     : MediaQuery.of(context).size.width * 0.06,
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-                child: Text(appointment.patient!.username!),
+                child: Text(
+                    "${appointment.patient!.firstName!} ${appointment.patient!.lastName!}"),
               ),
             ],
           ),
@@ -243,6 +247,8 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
   }
 
   printing(Appointment appointment) async {
+    var data = await rootBundle.load("fonts/IRANSansWeb(FaNum)_Bold.ttf");
+
     Developer.log("Heellooooooo Dr. ${appointment.supervisor!.firstName}");
     DateTime date = DateTime.parse(appointment.createdAt.toString());
     List<String>? rays = [];
@@ -278,7 +284,9 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                               child: pw.Text(
                                   '${appointment.patient!.firstName} ${appointment.patient!.lastName}',
                                   textAlign: pw.TextAlign.center,
-                                  style: pw.TextStyle(fontSize: 16.0)))
+                                  textDirection: pw.TextDirection.rtl,
+                                  style: pw.TextStyle(
+                                      font: pw.Font.ttf(data), fontSize: 16.0)))
                         ]),
                       ]),
                       pw.TableRow(children: [
@@ -292,9 +300,13 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                           pw.Container(
                               padding: pw.EdgeInsets.all(5),
                               child: pw.Text(
-                                  'Dr. ${appointment.supervisor!.username}',
+                                  'د. ${appointment.supervisor!.firstName} ${appointment.supervisor!.lastName}',
                                   textAlign: pw.TextAlign.center,
-                                  style: pw.TextStyle(fontSize: 16.0)))
+                                  textDirection: pw.TextDirection.rtl,
+                                  style: pw.TextStyle(
+                                    font: pw.Font.ttf(data),
+                                    fontSize: 16.0,
+                                  )))
                         ]),
                       ]),
                       pw.TableRow(children: [

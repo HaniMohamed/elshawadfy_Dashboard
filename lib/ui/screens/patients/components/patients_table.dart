@@ -136,14 +136,16 @@ class _PatientsTableState extends State<PatientsTable> {
                 backgroundColor: Colors
                     .primaries[Random().nextInt(Colors.primaries.length)]
                     .shade400,
-                child: Text(user.username!.substring(0, 2).toString()),
+                child: Text(user.firstName!.substring(0, 1).toString() +
+                    "" +
+                    user.lastName!.substring(0, 1).toString()),
               ),
               Container(
                 width: Responsive.isMobile(context)
                     ? MediaQuery.of(context).size.width * 0.2
                     : MediaQuery.of(context).size.width * 0.06,
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-                child: Text(user.username!),
+                child: Text("${user.firstName!} ${user.lastName!}"),
               ),
             ],
           ),

@@ -17,7 +17,7 @@ class NewEditUserDialog extends StatefulWidget {
 
 class _NewEditUserDialogState extends State<NewEditUserDialog> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController usernameController = TextEditingController();
+  // TextEditingController usernameController = TextEditingController();
   TextEditingController firstnameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
@@ -39,7 +39,7 @@ class _NewEditUserDialogState extends State<NewEditUserDialog> {
 
       User user = User(
           type: "${widget.type}",
-          username: usernameController.text,
+          username: phoneController.text,
           firstName: firstnameController.text,
           lastName: lastnameController.text,
           sex: choice,
@@ -93,7 +93,7 @@ class _NewEditUserDialogState extends State<NewEditUserDialog> {
     if (widget.isEditing) {
       setState(() {
         _radioValue = widget.user!.sex ?? "";
-        usernameController.text = widget.user!.username ?? "";
+        // usernameController.text = widget.user!.username ?? "";
         firstnameController.text = widget.user!.firstName ?? "";
         lastnameController.text = widget.user!.lastName ?? "";
         ageController.text = widget.user!.age.toString();
@@ -114,34 +114,34 @@ class _NewEditUserDialogState extends State<NewEditUserDialog> {
             child: Column(
               children: [
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: TextFormField(
-                    controller: usernameController,
-                    keyboardType: TextInputType.name,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
-                    ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Cannot be empty';
-                      }
-                      return null;
-                    },
-                    onFieldSubmitted: (value) {
-                      save();
-                    },
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Username',
-                      icon: Icon(Icons.person),
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.grey)),
-                      enabledBorder: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.blue)),
-                    ),
-                  ),
-                ),
+                // Container(
+                //   padding: const EdgeInsets.symmetric(vertical: 10),
+                //   child: TextFormField(
+                //     controller: usernameController,
+                //     keyboardType: TextInputType.name,
+                //     inputFormatters: <TextInputFormatter>[
+                //       FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
+                //     ],
+                //     validator: (value) {
+                //       if (value == null || value.isEmpty) {
+                //         return 'Cannot be empty';
+                //       }
+                //       return null;
+                //     },
+                //     onFieldSubmitted: (value) {
+                //       save();
+                //     },
+                //     style: TextStyle(color: Colors.white),
+                //     decoration: InputDecoration(
+                //       labelText: 'Username',
+                //       icon: Icon(Icons.person),
+                //       border: new OutlineInputBorder(
+                //           borderSide: new BorderSide(color: Colors.grey)),
+                //       enabledBorder: new OutlineInputBorder(
+                //           borderSide: new BorderSide(color: Colors.blue)),
+                //     ),
+                //   ),
+                // ),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextFormField(
