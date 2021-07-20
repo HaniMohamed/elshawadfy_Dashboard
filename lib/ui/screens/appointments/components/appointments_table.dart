@@ -368,8 +368,8 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
         barrierDismissible: true,
         builder: (BuildContext context) {
           return AlertDialog(
-            title:
-                Text('New Appointment for (${appointment!.patient!.username})'),
+            title: Text(
+                'New Appointment for (${appointment!.patient!.firstName} ${appointment!.patient!.lastName})'),
             content: NewEditAppointmentDialog(
               isEditing: true,
               appointment: appointment,

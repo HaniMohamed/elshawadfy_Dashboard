@@ -259,7 +259,8 @@ class _PatientsTableState extends State<PatientsTable> {
         barrierDismissible: true,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('New Appointment for (${user!.username})'),
+            title: Text(
+                'New Appointment for (${user!.firstName} ${user!.lastName})'),
             content: NewEditAppointmentDialog(
               isEditing: false,
               patient: user,

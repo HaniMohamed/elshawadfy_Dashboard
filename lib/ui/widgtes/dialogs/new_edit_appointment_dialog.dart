@@ -81,9 +81,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
           supervisorID: widget.isEditing
               ? widget.appointment!.supervisor!.id
               : doctors
-                  .lastWhere((element) =>
-                      "${element.firstName} ${element.lastName}" ==
-                      dropdownValue)
+                  .lastWhere((element) => element.username == dropdownValue)
                   .id,
           totalPrice: totPrice.toString(),
           radiologyIDs: selectedRays.map((e) => e.id).toList(),
