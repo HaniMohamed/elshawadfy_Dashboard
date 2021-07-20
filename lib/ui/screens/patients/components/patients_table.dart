@@ -203,7 +203,7 @@ class _PatientsTableState extends State<PatientsTable> {
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        "Are you sure to delete patient (${user.username}) !!",
+                        "Are you sure to delete patient (${user.firstName} ${user.lastName}) !!",
                         style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold),
                       ),
@@ -243,7 +243,7 @@ class _PatientsTableState extends State<PatientsTable> {
         barrierDismissible: true,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Edit Patient (${user!.username})'),
+            title: Text('Edit Patient (${user!.firstName} ${user.lastName})'),
             content: NewEditUserDialog(
               type: "P",
               isEditing: true,
@@ -260,7 +260,7 @@ class _PatientsTableState extends State<PatientsTable> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-                'New Appointment for (${user!.firstName} ${user!.lastName})'),
+                'New Appointment for (${user!.firstName} ${user.lastName})'),
             content: NewEditAppointmentDialog(
               isEditing: false,
               patient: user,

@@ -211,7 +211,7 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        "Are you sure to delete appointment of (${appointment.patient!.username}) !!",
+                        "Are you sure to delete appointment of (${appointment.patient!.firstName} ${appointment.patient!.lastName}) !!",
                         style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold),
                       ),
@@ -369,7 +369,7 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-                'New Appointment for (${appointment!.patient!.firstName} ${appointment!.patient!.lastName})'),
+                'New Appointment for (${appointment!.patient!.firstName} ${appointment.patient!.lastName})'),
             content: NewEditAppointmentDialog(
               isEditing: true,
               appointment: appointment,
