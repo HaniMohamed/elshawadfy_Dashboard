@@ -188,14 +188,14 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
 
   List<Widget> actionButtons(appointment) {
     return [
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        child: IconButton(
-            onPressed: () {
-              showEditAppointmentDialog(context, appointment);
-            },
-            icon: Icon(Icons.edit)),
-      ),
+      // Padding(
+      //   padding: EdgeInsets.symmetric(horizontal: 5),
+      //   child: IconButton(
+      //       onPressed: () {
+      //         showEditAppointmentDialog(context, appointment);
+      //       },
+      //       icon: Icon(Icons.edit)),
+      // ),
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 5),
         child: IconButton(
