@@ -247,7 +247,7 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
   }
 
   printing(Appointment appointment) async {
-    var data = await rootBundle.load("fonts/IRANSansWeb(FaNum)_Bold.ttf");
+    var data = await rootBundle.load("assets/fonts/iran_sans_bold.ttf");
 
     Developer.log("Heellooooooo Dr. ${appointment.supervisor!.firstName}");
     DateTime date = DateTime.parse(appointment.createdAt.toString());
@@ -300,7 +300,9 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                           pw.Container(
                               padding: pw.EdgeInsets.all(5),
                               child: pw.Text(
-                                  'د. ${appointment.supervisor!.firstName} ${appointment.supervisor!.lastName}',
+                                  appointment.supervisor != null
+                                      ? 'د. ${appointment.supervisor!.firstName} ${appointment.supervisor!.lastName}'
+                                      : 'د. ${appointment.anotherSupervisor}',
                                   textAlign: pw.TextAlign.center,
                                   textDirection: pw.TextDirection.rtl,
                                   style: pw.TextStyle(
