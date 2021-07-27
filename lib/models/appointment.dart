@@ -12,6 +12,7 @@ class Appointment {
   String? updatedAt;
   User? patient;
   User? supervisor;
+  String? anotherSupervisor;
   List<Radiology>? radiology;
 
   Appointment(
@@ -25,6 +26,7 @@ class Appointment {
       this.updatedAt,
       this.patient,
       this.supervisor,
+      this.anotherSupervisor,
       this.radiology});
 
   Appointment.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,8 @@ class Appointment {
     supervisor = json['supervisor'] != null
         ? new User.fromJson(json['supervisor'])
         : null;
+    anotherSupervisor = json['another_supervisor'];
+
     if (json['radiology'] != null) {
       radiology = [];
       json['radiology'].forEach((v) {
@@ -53,6 +57,7 @@ class Appointment {
 
     data['patient'] = this.patientID!;
     data['supervisor'] = this.supervisorID!;
+    data['another_supervisor'] = this.anotherSupervisor!;
     data['radiology'] = this.radiologyIDs!;
 
     return data;
