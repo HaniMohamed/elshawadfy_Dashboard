@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:admin/models/radiology.dart';
 import 'package:admin/shared/constants.dart';
 import 'package:dio/dio.dart';
@@ -19,10 +20,10 @@ class CRUDRaysServices {
           HttpHeaders.authorizationHeader: "Bearer ${prefs.getString("token")}"
         }),
       );
-      log(response.toString());
+      // log(response.toString());
       rays = List<Radiology>.from(
           response.data.map((model) => Radiology.fromJson(model)));
-      log(rays[0].name.toString());
+      // log(rays[0].name.toString());
     } on DioError catch (e) {
       log("error in listRays => ${e.response}");
       if (e.response!.statusCode == 403) {

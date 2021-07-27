@@ -56,8 +56,8 @@ class Appointment {
     data['total_price'] = this.totalPrice;
 
     data['patient'] = this.patientID!;
-    data['supervisor'] = this.supervisorID!;
-    data['another_supervisor'] = this.anotherSupervisor!;
+    data['supervisor'] = this.supervisorID ?? null;
+    data['another_supervisor'] = this.anotherSupervisor ?? null;
     data['radiology'] = this.radiologyIDs!;
 
     return data;

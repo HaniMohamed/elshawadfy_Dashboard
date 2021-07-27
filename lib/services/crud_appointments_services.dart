@@ -20,7 +20,7 @@ class CRUDAppointmentsServices {
           HttpHeaders.authorizationHeader: "Bearer ${prefs.getString("token")}"
         }),
       );
-      log(response.toString());
+      // log(response.toString());
       appointments = List<Appointment>.from(
           response.data.map((model) => Appointment.fromJson(model)));
       // log(appointments[0].patient!.username.toString());

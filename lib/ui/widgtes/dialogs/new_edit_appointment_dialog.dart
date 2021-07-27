@@ -26,6 +26,8 @@ class NewEditAppointmentDialog extends StatefulWidget {
 class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController patientNameController = TextEditingController();
+  TextEditingController anotherSupervisorNameController =
+      TextEditingController();
   TextEditingController notesController = TextEditingController();
   List<User> doctors = [];
   List<Radiology> rays = [];
@@ -38,6 +40,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
   bool loadingRays = true;
   bool loadingDoctors = true;
   String dropdownValue = 'Chose Doctor';
+  bool isAnotherSupervisor = false;
 
   getRays() async {
     setState(() {
@@ -62,53 +65,72 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
     doctors = await CRUDUsersServices().getUsers("D", context);
     setState(() {
       loadingDoctors = false;
-      dropdownValue = doctors[0].username!;
+      if (widget.isEditing && widget.appointment!.supervisor != null) {
+        isAnotherSupervisor = false;
+        anotherSupervisorNameController.text = "";
+        dropdownValue = doctors[doctors.indexWhere((element) =>
+                element.username == widget.appointment!.supervisor!.username)]
+            .username!;
+      } else
+        dropdownValue = doctors[0].username!;
     });
   }
 
   save() async {
     String result;
     if (selectedRays.isNotEmpty) {
-      setState(() {
-        _errorText = "";
-        isLoading = true;
-      });
+      if (!isAnotherSupervisor ||
+          anotherSupervisorNameController.text.isNotEmpty) {
+        setState(() {
+          _errorText = "";
+          isLoading = true;
+        });
 
-      Appointment appointment = Appointment(
-          patientID: widget.isEditing
-              ? widget.appointment!.patient!.id
-              : widget.patient!.id,
-          supervisorID: widget.isEditing
-              ? widget.appointment!.supervisor!.id
-              : doctors
-                  .lastWhere((element) => element.username == dropdownValue)
-                  .id,
-          totalPrice: totPrice.toString(),
-          radiologyIDs: selectedRays.map((e) => e.id).toList(),
-          notes: notesController.text);
+        Appointment appointment = Appointment(
+            patientID: widget.isEditing
+                ? widget.appointment!.patient!.id
+                : widget.patient!.id,
+            supervisorID: isAnotherSupervisor
+                ? null
+                : doctors
+                    .lastWhere((element) => element.username == dropdownValue)
+                    .id,
+            anotherSupervisor: !isAnotherSupervisor
+                ? null
+                : anotherSupervisorNameController.text,
+            totalPrice: totPrice.toString(),
+            radiologyIDs: selectedRays.map((e) => e.id).toList(),
+            notes: notesController.text);
 
-      if (widget.isEditing) {
-        appointment.id = widget.appointment!.id;
-        result = await Provider.of<AppointmentViewModel>(context, listen: false)
-            .editAppointment(appointment, context);
-      } else
-        result = await Provider.of<AppointmentViewModel>(context, listen: false)
-            .newAppointment(appointment, context);
+        if (widget.isEditing) {
+          appointment.id = widget.appointment!.id;
+          result =
+              await Provider.of<AppointmentViewModel>(context, listen: false)
+                  .editAppointment(appointment, context);
+        } else
+          result =
+              await Provider.of<AppointmentViewModel>(context, listen: false)
+                  .newAppointment(appointment, context);
 
-      setState(() {
-        isLoading = false;
-        if (result == "success") {
-          setState(() {
-            Navigator.pop(context);
-            Provider.of<MenuController>(context, listen: false)
-                .showPageIndex(1);
-          });
-        } else {
-          setState(() {
-            _errorText = result;
-          });
-        }
-      });
+        setState(() {
+          isLoading = false;
+          if (result == "success") {
+            setState(() {
+              Navigator.pop(context);
+              Provider.of<MenuController>(context, listen: false)
+                  .showPageIndex(1);
+            });
+          } else {
+            setState(() {
+              _errorText = result;
+            });
+          }
+        });
+      } else {
+        setState(() {
+          _errorText = "You should insert supervisor name !!";
+        });
+      }
     } else {
       setState(() {
         _errorText = "You should select at least one ray !!";
@@ -127,6 +149,11 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
             " " +
             widget.appointment!.patient!.lastName!;
         notesController.text = widget.appointment!.notes ?? "";
+        if (widget.appointment!.supervisor == null) {
+          isAnotherSupervisor = true;
+          anotherSupervisorNameController.text =
+              widget.appointment!.anotherSupervisor!;
+        }
       });
     } else {
       setState(() {
@@ -238,10 +265,11 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                       Text("Dr.  "),
                       loadingDoctors
                           ? CircularProgressIndicator()
-                          : Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                DropdownButton<String>(
+                          : AbsorbPointer(
+                              absorbing: isAnotherSupervisor,
+                              child: Opacity(
+                                opacity: isAnotherSupervisor ? 0.3 : 1.0,
+                                child: DropdownButton<String>(
                                   value: dropdownValue,
                                   icon: const Icon(Icons.arrow_downward),
                                   iconSize: 24,
@@ -265,8 +293,48 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                                     );
                                   }).toList(),
                                 ),
-                              ],
-                            )
+                              ),
+                            ),
+                      Spacer(),
+                      Checkbox(
+                        value: isAnotherSupervisor,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            isAnotherSupervisor = value!;
+                          });
+                        },
+                      ),
+                      AbsorbPointer(
+                        absorbing: !isAnotherSupervisor,
+                        child: Opacity(
+                          opacity: !isAnotherSupervisor ? 0.3 : 1.0,
+                          child: Row(
+                            children: [
+                              Text("Another Dr:"),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5)),
+                              SizedBox(
+                                width: 200,
+                                child: TextFormField(
+                                  controller: anotherSupervisorNameController,
+                                  enabled: true,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    labelText: 'Supervisor name',
+                                    hintText: 'Insert name of doctor',
+                                    border: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: Colors.grey)),
+                                    enabledBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: Colors.blue)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),

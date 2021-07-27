@@ -1,4 +1,3 @@
-import 'dart:developer' as Developer;
 import 'dart:math';
 
 import 'package:admin/models/appointment.dart';
@@ -132,7 +131,7 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
     DateTime date = DateTime.parse(appointment.createdAt.toString());
     List<String>? rays = [];
     appointment.radiology!.forEach((e) {
-      Developer.log(e.name.toString());
+      // Developer.log(e.name.toString());
       rays.add(e.name.toString());
     });
 
@@ -249,11 +248,10 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
   printing(Appointment appointment) async {
     var data = await rootBundle.load("assets/fonts/iran_sans_bold.ttf");
 
-    Developer.log("Heellooooooo Dr. ${appointment.supervisor!.firstName}");
     DateTime date = DateTime.parse(appointment.createdAt.toString());
     List<String>? rays = [];
     appointment.radiology!.forEach((e) {
-      Developer.log(e.name.toString());
+      // Developer.log(e.name.toString());
       rays.add(e.name.toString());
     });
     final doc = pw.Document();
@@ -339,7 +337,8 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                               padding: pw.EdgeInsets.all(5),
                               child: pw.Text(rays.join(", "),
                                   textAlign: pw.TextAlign.center,
-                                  style: pw.TextStyle(fontSize: 16.0)))
+                                  style: pw.TextStyle(
+                                      font: pw.Font.ttf(data), fontSize: 16.0)))
                         ]),
                       ]),
                       pw.TableRow(children: [
