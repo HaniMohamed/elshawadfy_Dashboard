@@ -1,13 +1,17 @@
 import 'package:admin/models/radiology.dart';
+import 'package:admin/models/shift.dart';
 import 'package:admin/models/user.dart';
 
 class Appointment {
   int? id;
   int? patientID;
   int? supervisorID;
+  Shift? shift;
+  int? shiftID;
   List? radiologyIDs;
   String? notes;
   String? totalPrice;
+  String? actualPrice;
   String? createdAt;
   String? updatedAt;
   User? patient;
@@ -19,9 +23,11 @@ class Appointment {
       {this.id,
       this.patientID,
       this.supervisorID,
+      this.shiftID,
       this.radiologyIDs,
       this.notes,
       this.totalPrice,
+      this.actualPrice,
       this.createdAt,
       this.updatedAt,
       this.patient,
@@ -33,10 +39,12 @@ class Appointment {
     id = json['id'];
     notes = json['notes'];
     totalPrice = json['total_price'];
+    actualPrice = json['actual_price'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     patient =
         json['patient'] != null ? new User.fromJson(json['patient']) : null;
+    shift = json['shift'] != null ? new Shift.fromJson(json['shift']) : null;
     supervisor = json['supervisor'] != null
         ? new User.fromJson(json['supervisor'])
         : null;
@@ -54,9 +62,10 @@ class Appointment {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['notes'] = this.notes;
     data['total_price'] = this.totalPrice;
-
+    data['actual_price'] = this.actualPrice;
     data['patient'] = this.patientID!;
     data['supervisor'] = this.supervisorID ?? null;
+    data['shift'] = this.shiftID ?? null;
     data['another_supervisor'] = this.anotherSupervisor ?? null;
     data['radiology'] = this.radiologyIDs!;
 

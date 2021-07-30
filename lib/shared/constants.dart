@@ -26,3 +26,8 @@ const listRaysAPI = "api/v1/radiology";
 const newRaysAPI = "api/v1/radiology/new";
 const editRaysAPI = "api/v1/radiology/update/";
 const deleteRaysAPI = "api/v1/radiology/delete/";
+
+const listShiftsAPI = "api/v1/shifts";
+const newShiftsAPI = "api/v1/shifts/new";
+const editShiftsAPI = "api/v1/shifts/update/";
+const deleteShiftsAPI = "api/v1/shifts/delete/";

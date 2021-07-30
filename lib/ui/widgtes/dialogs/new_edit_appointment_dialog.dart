@@ -1,10 +1,12 @@
 import 'package:admin/controllers/MenuController.dart';
 import 'package:admin/models/appointment.dart';
 import 'package:admin/models/radiology.dart';
+import 'package:admin/models/shift.dart';
 import 'package:admin/models/user.dart';
 import 'package:admin/services/crud_rays_services.dart';
 import 'package:admin/services/crud_users_services.dart';
 import 'package:admin/view_model/appointment_view_model.dart';
+import 'package:admin/view_model/shift_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -26,6 +28,7 @@ class NewEditAppointmentDialog extends StatefulWidget {
 class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController patientNameController = TextEditingController();
+  TextEditingController actualPriceController = TextEditingController();
   TextEditingController anotherSupervisorNameController =
       TextEditingController();
   TextEditingController notesController = TextEditingController();
@@ -77,6 +80,10 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
   }
 
   save() async {
+    List<Shift> shifts =
+        await Provider.of<ShiftViewModel>(context, listen: false)
+            .getShifts(context);
+    int? shiftID = shifts[0].id;
     String result;
     if (selectedRays.isNotEmpty) {
       if (!isAnotherSupervisor ||
@@ -99,8 +106,10 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                 ? null
                 : anotherSupervisorNameController.text,
             totalPrice: totPrice.toString(),
+            actualPrice: actualPriceController.text,
             radiologyIDs: selectedRays.map((e) => e.id).toList(),
-            notes: notesController.text);
+            notes: notesController.text,
+            shiftID: shiftID);
 
         if (widget.isEditing) {
           appointment.id = widget.appointment!.id;
@@ -112,20 +121,27 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
               await Provider.of<AppointmentViewModel>(context, listen: false)
                   .newAppointment(appointment, context);
 
-        setState(() {
-          isLoading = false;
-          if (result == "success") {
-            setState(() {
-              Navigator.pop(context);
-              Provider.of<MenuController>(context, listen: false)
-                  .showPageIndex(1);
-            });
-          } else {
-            setState(() {
-              _errorText = result;
-            });
-          }
-        });
+        if (result == "success") {
+          await Provider.of<ShiftViewModel>(context, listen: false).editShift(
+              Shift(
+                  id: shifts[0].id,
+                  totalIncome: (double.parse(shifts[0].totalIncome!) +
+                          double.parse(actualPriceController.text))
+                      .toString(),
+                  receptionist: shifts[0].receptionist),
+              context);
+          setState(() {
+            isLoading = false;
+            Navigator.pop(context);
+            Provider.of<MenuController>(context, listen: false)
+                .showPageIndex(1);
+          });
+        } else {
+          setState(() {
+            isLoading = false;
+            _errorText = result;
+          });
+        }
       } else {
         setState(() {
           _errorText = "You should insert supervisor name !!";
@@ -143,6 +159,9 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
     super.initState();
     getDoctors();
     getRays();
+    setState(() {
+      actualPriceController.text = totPrice.toString();
+    });
     if (widget.isEditing) {
       setState(() {
         patientNameController.text = widget.appointment!.patient!.firstName! +
@@ -168,6 +187,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
     selectedRays.forEach((element) {
       setState(() {
         totPrice += double.parse(element.price!);
+        actualPriceController.text = totPrice.toString();
       });
     });
   }
@@ -361,7 +381,53 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                 Container(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.centerRight,
-                    child: Text("Tot. Price: $totPrice")),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text("Tot. Price:"),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: SizedBox(
+                            width: 80,
+                            child: Text("$totPrice"),
+                          ),
+                        )
+                      ],
+                    )),
+                Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Actual Price: "),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: SizedBox(
+                            width: 80,
+                            child: TextFormField(
+                              controller: actualPriceController,
+                              keyboardType: TextInputType.number,
+                              maxLength: 8,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[0-9]")),
+                              ],
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                border: new OutlineInputBorder(
+                                    borderSide:
+                                        new BorderSide(color: Colors.grey)),
+                                enabledBorder: new OutlineInputBorder(
+                                    borderSide:
+                                        new BorderSide(color: Colors.blue)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
                 Padding(
                   padding: EdgeInsets.only(top: 10),
                   child: _errorText == null

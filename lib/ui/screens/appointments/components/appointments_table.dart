@@ -78,7 +78,7 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                           ),
                           if (!Responsive.isMobile(context))
                             DataColumn(
-                              label: Text("Tot. Price"),
+                              label: Text("Tot. Price - (Actual)"),
                             ),
                           if (!Responsive.isMobile(context))
                             DataColumn(
@@ -162,7 +162,8 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
         ),
         DataCell(Text(rays.join(", "))),
         if (!Responsive.isMobile(context))
-          DataCell(Text(appointment.totalPrice.toString())),
+          DataCell(Text(
+              "${appointment.totalPrice.toString()} - (${appointment.actualPrice.toString()})")),
         if (!Responsive.isMobile(context))
           DataCell(Text(
             "${date.year}/${date.month}/${date.day}",
@@ -260,103 +261,112 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
         pageFormat: PdfPageFormat.a6,
         orientation: pw.PageOrientation.landscape,
         build: (pw.Context context) {
-          return pw.Column(mainAxisSize: pw.MainAxisSize.min, children: [
-            pw.Container(
-                margin: pw.EdgeInsets.all(5),
-                child: pw.Table(
-                    border: pw.TableBorder.all(
-                        color: PdfColor.fromHex("#000000"),
-                        style: pw.BorderStyle.solid,
-                        width: 2),
-                    children: [
-                      pw.TableRow(children: [
-                        pw.Column(children: [
-                          pw.Text('Name:',
-                              style: pw.TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: pw.FontWeight.bold))
-                        ]),
-                        pw.Column(children: [
-                          pw.Container(
-                              padding: pw.EdgeInsets.all(5),
-                              child: pw.Text(
-                                  '${appointment.patient!.firstName} ${appointment.patient!.lastName}',
-                                  textAlign: pw.TextAlign.center,
-                                  textDirection: pw.TextDirection.rtl,
+          return pw.Column(mainAxisSize: pw.MainAxisSize.max, children: [
+            pw.Expanded(
+                child: pw.Container(
+                    constraints: pw.BoxConstraints.expand(),
+                    alignment: pw.Alignment.center,
+                    child: pw.Table(
+                        tableWidth: pw.TableWidth.max,
+                        border: pw.TableBorder.all(
+                            color: PdfColor.fromHex("#000000"),
+                            style: pw.BorderStyle.solid,
+                            width: 2),
+                        children: [
+                          pw.TableRow(children: [
+                            pw.Column(children: [
+                              pw.Text('Name:',
                                   style: pw.TextStyle(
-                                      font: pw.Font.ttf(data), fontSize: 16.0)))
-                        ]),
-                      ]),
-                      pw.TableRow(children: [
-                        pw.Column(children: [
-                          pw.Text('REF.PRO:',
-                              style: pw.TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: pw.FontWeight.bold))
-                        ]),
-                        pw.Column(children: [
-                          pw.Container(
-                              padding: pw.EdgeInsets.all(5),
-                              child: pw.Text(
-                                  appointment.supervisor != null
-                                      ? 'د. ${appointment.supervisor!.firstName} ${appointment.supervisor!.lastName}'
-                                      : 'د. ${appointment.anotherSupervisor}',
-                                  textAlign: pw.TextAlign.center,
-                                  textDirection: pw.TextDirection.rtl,
+                                      fontSize: 20.0,
+                                      fontWeight: pw.FontWeight.bold))
+                            ]),
+                            pw.Column(children: [
+                              pw.Container(
+                                  padding: pw.EdgeInsets.all(10),
+                                  child: pw.Text(
+                                      '${appointment.patient!.firstName} ${appointment.patient!.lastName}',
+                                      textAlign: pw.TextAlign.center,
+                                      textDirection: pw.TextDirection.rtl,
+                                      style: pw.TextStyle(
+                                          font: pw.Font.ttf(data),
+                                          fontSize: 18.0)))
+                            ]),
+                          ]),
+                          pw.TableRow(children: [
+                            pw.Column(children: [
+                              pw.Text('REF. PRO:',
                                   style: pw.TextStyle(
-                                    font: pw.Font.ttf(data),
-                                    fontSize: 16.0,
-                                  )))
-                        ]),
-                      ]),
-                      pw.TableRow(children: [
-                        pw.Column(children: [
-                          pw.Text('Date:',
-                              style: pw.TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: pw.FontWeight.bold))
-                        ]),
-                        pw.Column(children: [
-                          pw.Container(
-                              padding: pw.EdgeInsets.all(5),
-                              child: pw.Text(
-                                  "${date.year}/${date.month}/${date.day}",
-                                  textAlign: pw.TextAlign.center,
-                                  style: pw.TextStyle(fontSize: 16.0)))
-                        ]),
-                      ]),
-                      pw.TableRow(children: [
-                        pw.Column(children: [
-                          pw.Text('Scan:',
-                              style: pw.TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: pw.FontWeight.bold))
-                        ]),
-                        pw.Column(children: [
-                          pw.Container(
-                              padding: pw.EdgeInsets.all(5),
-                              child: pw.Text(rays.join(", "),
-                                  textAlign: pw.TextAlign.center,
+                                      fontSize: 20.0,
+                                      fontWeight: pw.FontWeight.bold))
+                            ]),
+                            pw.Column(children: [
+                              pw.Container(
+                                  padding: pw.EdgeInsets.all(10),
+                                  child: pw.Text(
+                                      appointment.supervisor != null
+                                          ? 'د. ${appointment.supervisor!.firstName} ${appointment.supervisor!.lastName}'
+                                          : 'د. ${appointment.anotherSupervisor}',
+                                      textAlign: pw.TextAlign.center,
+                                      textDirection: pw.TextDirection.rtl,
+                                      style: pw.TextStyle(
+                                        font: pw.Font.ttf(data),
+                                        fontSize: 18.0,
+                                      )))
+                            ]),
+                          ]),
+                          pw.TableRow(children: [
+                            pw.Column(children: [
+                              pw.Text('Date:',
                                   style: pw.TextStyle(
-                                      font: pw.Font.ttf(data), fontSize: 16.0)))
-                        ]),
-                      ]),
-                      pw.TableRow(children: [
-                        pw.Column(children: [
-                          pw.Text('Age:',
-                              style: pw.TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: pw.FontWeight.bold))
-                        ]),
-                        pw.Column(children: [
-                          pw.Container(
-                              padding: pw.EdgeInsets.all(5),
-                              child: pw.Text("${appointment.patient!.age}",
-                                  textAlign: pw.TextAlign.center,
-                                  style: pw.TextStyle(fontSize: 16.0)))
-                        ]),
-                      ]),
-                    ]))
+                                      fontSize: 20.0,
+                                      fontWeight: pw.FontWeight.bold))
+                            ]),
+                            pw.Column(children: [
+                              pw.Container(
+                                  padding: pw.EdgeInsets.all(10),
+                                  child: pw.Text(
+                                      "${date.year}/${date.month}/${date.day}",
+                                      textAlign: pw.TextAlign.center,
+                                      style: pw.TextStyle(
+                                        fontSize: 18.0,
+                                      )))
+                            ]),
+                          ]),
+                          pw.TableRow(children: [
+                            pw.Column(children: [
+                              pw.Text('Scan:',
+                                  style: pw.TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: pw.FontWeight.bold))
+                            ]),
+                            pw.Column(children: [
+                              pw.Container(
+                                  padding: pw.EdgeInsets.all(10),
+                                  child: pw.Text(rays.join(", "),
+                                      textAlign: pw.TextAlign.center,
+                                      style: pw.TextStyle(
+                                          font: pw.Font.ttf(data),
+                                          fontSize: 18.0)))
+                            ]),
+                          ]),
+                          pw.TableRow(children: [
+                            pw.Column(children: [
+                              pw.Text('Age:',
+                                  style: pw.TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: pw.FontWeight.bold))
+                            ]),
+                            pw.Column(children: [
+                              pw.Container(
+                                  padding: pw.EdgeInsets.all(10),
+                                  child: pw.Text("${appointment.patient!.age}",
+                                      textAlign: pw.TextAlign.center,
+                                      style: pw.TextStyle(
+                                        fontSize: 18.0,
+                                      )))
+                            ]),
+                          ]),
+                        ]))),
           ]);
         }));
     await Printing.layoutPdf(

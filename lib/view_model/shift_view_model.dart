@@ -1,20 +1,20 @@
-import 'package:admin/models/user.dart';
-import 'package:admin/services/crud_users_services.dart';
+import 'package:admin/models/shift.dart';
+import 'package:admin/services/crud_shifts_services.dart';
 import 'package:flutter/material.dart';
 
-class PatientViewModel extends ChangeNotifier {
-  List<User> users = [];
+class ShiftViewModel extends ChangeNotifier {
+  List<Shift> shifts = [];
 
-  Future getPatients(context, {String? phone}) async {
-    users = await CRUDUsersServices().getUsers("P", context, phone: phone);
+  Future getShifts(context) async {
+    shifts = await CRUDShiftsServices().getOpenedShifts(context);
     notifyListeners();
-    return users;
+    return shifts;
   }
 
-  Future newPatient(User user, context) async {
-    String result = await CRUDUsersServices().newUser(user, context);
+  Future newShift(Shift shift, context) async {
+    String result = await CRUDShiftsServices().newShift(shift, context);
     if (result == "success") {
-      await getPatients(context);
+      await getShifts(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(
@@ -36,10 +36,10 @@ class PatientViewModel extends ChangeNotifier {
     return result;
   }
 
-  Future editPatient(User user, context) async {
-    String result = await CRUDUsersServices().editUser(user, context);
+  Future editShift(Shift shift, context) async {
+    String result = await CRUDShiftsServices().editShift(shift, context);
     if (result == "success") {
-      await getPatients(context);
+      await getShifts(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(
@@ -61,10 +61,10 @@ class PatientViewModel extends ChangeNotifier {
     return result;
   }
 
-  Future deletePatient(User user, context) async {
-    String result = await CRUDUsersServices().deleteUser(user, context);
+  Future deleteShift(Shift shift, context) async {
+    String result = await CRUDShiftsServices().deleteShift(shift, context);
     if (result == "success") {
-      await getPatients(context);
+      await getShifts(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(

@@ -1,11 +1,7 @@
-import 'dart:developer';
-
 import 'package:admin/responsive.dart';
 import 'package:admin/shared/constants.dart';
-import 'package:admin/ui/widgtes/dialogs/new_edit_user_dialog.dart';
 import 'package:admin/ui/widgtes/header.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'components/appointments_table.dart';
 import 'components/storage_details.dart';
@@ -56,11 +52,11 @@ class AppointmentsScreen extends StatelessWidget {
                 if (!Responsive.isMobile(context))
                   SizedBox(width: defaultPadding),
                 // On Mobile means if the screen is less than 850 we dont want to show it
-                if (!Responsive.isMobile(context))
-                  Expanded(
-                    flex: 2,
-                    child: StarageDetails(),
-                  ),
+                // if (!Responsive.isMobile(context))
+                //   Expanded(
+                //     flex: 2,
+                //     child: StarageDetails(),
+                //   ),
               ],
             )
           ],
