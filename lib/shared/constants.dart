@@ -31,3 +31,8 @@ const listShiftsAPI = "api/v1/shifts";
 const newShiftsAPI = "api/v1/shifts/new";
 const editShiftsAPI = "api/v1/shifts/update/";
 const deleteShiftsAPI = "api/v1/shifts/delete/";
+
+const listInsuranceAPI = "api/v1/insurance";
+const newInsuranceAPI = "api/v1/insurance/new";
+const editInsuranceAPI = "api/v1/insurance/";
+const deleteInsuranceAPI = "api/v1/insurance/";

@@ -1,8 +1,10 @@
 import 'package:admin/controllers/MenuController.dart';
 import 'package:admin/models/appointment.dart';
+import 'package:admin/models/insurance.dart';
 import 'package:admin/models/radiology.dart';
 import 'package:admin/models/shift.dart';
 import 'package:admin/models/user.dart';
+import 'package:admin/services/crud_insurance_services.dart';
 import 'package:admin/services/crud_rays_services.dart';
 import 'package:admin/services/crud_users_services.dart';
 import 'package:admin/view_model/appointment_view_model.dart';
@@ -33,6 +35,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
       TextEditingController();
   TextEditingController notesController = TextEditingController();
   List<User> doctors = [];
+  List<Insurance> insurances = [];
   List<Radiology> rays = [];
   List<Radiology> selectedRays = [];
   List<MultiSelectItem<Radiology?>> _raysItems = [];
@@ -42,7 +45,9 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
   bool isLoading = false;
   bool loadingRays = true;
   bool loadingDoctors = true;
-  String dropdownValue = 'Chose Doctor';
+  bool loadingInsurances = true;
+  String doctorDropdownValue = 'Chose Doctor';
+  String insuranceDropdownValue = 'Chose Insurance';
   bool isAnotherSupervisor = false;
 
   getRays() async {
@@ -61,6 +66,23 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
     });
   }
 
+  getInsurances() async {
+    setState(() {
+      loadingInsurances = true;
+    });
+    insurances = await CRUDInsurancesServices().getInsurances(context);
+    insurances.insert(0, Insurance(id: null, name: "No Medical Insurance"));
+    setState(() {
+      loadingInsurances = false;
+      if (widget.isEditing && widget.appointment!.insurance != null) {
+        insuranceDropdownValue = insurances[insurances.indexWhere((element) =>
+                element.name == widget.appointment!.insurance!.name)]
+            .name!;
+      } else
+        insuranceDropdownValue = insurances[0].name!;
+    });
+  }
+
   getDoctors() async {
     setState(() {
       loadingDoctors = true;
@@ -71,11 +93,11 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
       if (widget.isEditing && widget.appointment!.supervisor != null) {
         isAnotherSupervisor = false;
         anotherSupervisorNameController.text = "";
-        dropdownValue = doctors[doctors.indexWhere((element) =>
+        doctorDropdownValue = doctors[doctors.indexWhere((element) =>
                 element.username == widget.appointment!.supervisor!.username)]
             .username!;
       } else
-        dropdownValue = doctors[0].username!;
+        doctorDropdownValue = doctors[0].username!;
     });
   }
 
@@ -97,10 +119,17 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
             patientID: widget.isEditing
                 ? widget.appointment!.patient!.id
                 : widget.patient!.id,
+            insuranceID: insuranceDropdownValue == "No medical insurance"
+                ? null
+                : insurances
+                    .lastWhere(
+                        (element) => element.name == insuranceDropdownValue)
+                    .id,
             supervisorID: isAnotherSupervisor
                 ? null
                 : doctors
-                    .lastWhere((element) => element.username == dropdownValue)
+                    .lastWhere(
+                        (element) => element.username == doctorDropdownValue)
                     .id,
             anotherSupervisor: !isAnotherSupervisor
                 ? null
@@ -159,6 +188,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
     super.initState();
     getDoctors();
     getRays();
+    getInsurances();
     setState(() {
       actualPriceController.text = totPrice.toString();
     });
@@ -218,6 +248,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                     ),
                   ),
                 ),
+                Divider(),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   height: MediaQuery.of(context).size.height * 0.1,
@@ -271,6 +302,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                     ],
                   ),
                 ),
+                Divider(),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                   child: Row(
@@ -290,7 +322,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                               child: Opacity(
                                 opacity: isAnotherSupervisor ? 0.3 : 1.0,
                                 child: DropdownButton<String>(
-                                  value: dropdownValue,
+                                  value: doctorDropdownValue,
                                   icon: const Icon(Icons.arrow_downward),
                                   iconSize: 24,
                                   elevation: 16,
@@ -301,7 +333,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                                   ),
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      dropdownValue = newValue!;
+                                      doctorDropdownValue = newValue!;
                                     });
                                   },
                                   items: doctors
@@ -358,6 +390,47 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                     ],
                   ),
                 ),
+                Divider(),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Medical Insurance:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
+                      loadingInsurances
+                          ? CircularProgressIndicator()
+                          : DropdownButton<String>(
+                              value: insuranceDropdownValue,
+                              icon: const Icon(Icons.arrow_downward),
+                              iconSize: 24,
+                              elevation: 16,
+                              style: const TextStyle(color: Colors.white),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.black26,
+                              ),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  insuranceDropdownValue = newValue!;
+                                });
+                              },
+                              items: insurances
+                                  .map<DropdownMenuItem<String>>((value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.name,
+                                  child: Text("${value.name}"),
+                                );
+                              }).toList(),
+                            ),
+                    ],
+                  ),
+                ),
+                Divider(),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextFormField(
@@ -378,6 +451,7 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                     ),
                   ),
                 ),
+                Divider(),
                 Container(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.centerRight,

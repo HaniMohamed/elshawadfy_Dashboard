@@ -1,3 +1,4 @@
+import 'package:admin/models/insurance.dart';
 import 'package:admin/models/radiology.dart';
 import 'package:admin/models/shift.dart';
 import 'package:admin/models/user.dart';
@@ -8,6 +9,8 @@ class Appointment {
   int? supervisorID;
   Shift? shift;
   int? shiftID;
+  Insurance? insurance;
+  int? insuranceID;
   List? radiologyIDs;
   String? notes;
   String? totalPrice;
@@ -24,6 +27,7 @@ class Appointment {
       this.patientID,
       this.supervisorID,
       this.shiftID,
+      this.insuranceID,
       this.radiologyIDs,
       this.notes,
       this.totalPrice,
@@ -45,6 +49,9 @@ class Appointment {
     patient =
         json['patient'] != null ? new User.fromJson(json['patient']) : null;
     shift = json['shift'] != null ? new Shift.fromJson(json['shift']) : null;
+    insurance = json['insurance'] != null
+        ? new Insurance.fromJson(json['insurance'])
+        : null;
     supervisor = json['supervisor'] != null
         ? new User.fromJson(json['supervisor'])
         : null;
@@ -66,6 +73,7 @@ class Appointment {
     data['patient'] = this.patientID!;
     data['supervisor'] = this.supervisorID ?? null;
     data['shift'] = this.shiftID ?? null;
+    data['insurance'] = this.insuranceID ?? null;
     data['another_supervisor'] = this.anotherSupervisor ?? null;
     data['radiology'] = this.radiologyIDs!;
 
