@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:math';
 
 import 'package:admin/models/user.dart';
@@ -231,6 +232,17 @@ class _PatientsTableState extends State<PatientsTable> {
             },
             icon: Icon(
               Icons.perm_contact_calendar_outlined,
+              color: Colors.blue,
+            )),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: IconButton(
+            onPressed: () {
+              window.open('https://el-shawadfy-upload.web.app/', "_blank");
+            },
+            icon: Icon(
+              Icons.link,
               color: Colors.blue,
             )),
       ),
