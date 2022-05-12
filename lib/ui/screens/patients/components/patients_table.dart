@@ -239,6 +239,19 @@ class _PatientsTableState extends State<PatientsTable> {
         padding: EdgeInsets.symmetric(horizontal: 5),
         child: IconButton(
             onPressed: () {
+              window.open(
+                  'https://docs.google.com/document/d/1E_Bdv1lwoWE2mOF8LKFzOatXvd-GmLbv70WpIwoiwoE/edit?usp=sharing',
+                  "_blank");
+            },
+            icon: Icon(
+              Icons.note,
+              color: Colors.blue,
+            )),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: IconButton(
+            onPressed: () {
               window.open('https://el-shawadfy-upload.web.app/', "_blank");
             },
             icon: Icon(
