@@ -3,6 +3,12 @@ import 'package:admin/models/radiology.dart';
 import 'package:admin/models/shift.dart';
 import 'package:admin/models/user.dart';
 
+Map<String, bool?> sides = {
+  "Unknown": null,
+  "Right": true,
+  "Left": false,
+};
+
 class Appointment {
   int? id;
   int? patientID;
@@ -19,6 +25,7 @@ class Appointment {
   String? updatedAt;
   User? patient;
   User? supervisor;
+  bool? side; // 1 = left, 2 = right
   String? anotherSupervisor;
   List<Radiology>? radiology;
 
@@ -37,7 +44,8 @@ class Appointment {
       this.patient,
       this.supervisor,
       this.anotherSupervisor,
-      this.radiology});
+      this.radiology,
+      this.side});
 
   Appointment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -56,12 +64,22 @@ class Appointment {
         ? new User.fromJson(json['supervisor'])
         : null;
     anotherSupervisor = json['another_supervisor'];
-
+    side = json['side'];
     if (json['radiology'] != null) {
       radiology = [];
       json['radiology'].forEach((v) {
         radiology!.add(new Radiology.fromJson(v));
       });
+    }
+  }
+
+  String? get sideKey {
+    if (side == null) {
+      return null;
+    } else if (side == true) {
+      return "Right";
+    } else {
+      return "Left";
     }
   }
 
@@ -76,6 +94,7 @@ class Appointment {
     data['insurance'] = this.insuranceID ?? null;
     data['another_supervisor'] = this.anotherSupervisor ?? null;
     data['radiology'] = this.radiologyIDs!;
+    data['side'] = this.side ?? "null";
 
     return data;
   }

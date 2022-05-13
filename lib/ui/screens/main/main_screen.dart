@@ -43,38 +43,38 @@ class _MainScreenState extends State<MainScreen> {
         await Provider.of<ShiftViewModel>(context, listen: false)
             .getShifts(context);
     if (shifts.isNotEmpty) {
-      if (shifts[0].receptionist!.username != username) {
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          barrierColor: Colors.black87,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Wrong shift receptionist'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Text(
-                        'There is another shift of (${shifts[0].receptionist!.username}) is opened'),
-                    Text(
-                        '(${shifts[0].receptionist!.username}) must login and close it first'),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('logout'),
-                  onPressed: () {
-                    prefs.clear();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/login', (Route<dynamic> route) => false);
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
+      // if (shifts[0].receptionist!.username != username) {
+      //   showDialog<void>(
+      //     context: context,
+      //     barrierDismissible: false,
+      //     barrierColor: Colors.black87,
+      //     builder: (BuildContext context) {
+      //       return AlertDialog(
+      //         title: const Text('Wrong shift receptionist'),
+      //         content: SingleChildScrollView(
+      //           child: ListBody(
+      //             children: <Widget>[
+      //               Text(
+      //                   'There is another shift of (${shifts[0].receptionist!.username}) is opened'),
+      //               Text(
+      //                   '(${shifts[0].receptionist!.username}) must login and close it first'),
+      //             ],
+      //           ),
+      //         ),
+      //         actions: <Widget>[
+      //           TextButton(
+      //             child: const Text('logout'),
+      //             onPressed: () {
+      //               prefs.clear();
+      //               Navigator.of(context).pushNamedAndRemoveUntil(
+      //                   '/login', (Route<dynamic> route) => false);
+      //             },
+      //           ),
+      //         ],
+      //       );
+      //     },
+      //   );
+      // }
     } else {
       showDialog<void>(
         context: context,

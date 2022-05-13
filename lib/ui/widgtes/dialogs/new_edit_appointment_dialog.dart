@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:search_choices/search_choices.dart';
 
 class NewEditAppointmentDialog extends StatefulWidget {
   Appointment? appointment;
@@ -40,7 +41,9 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
   List<Radiology> selectedRays = [];
   List<MultiSelectItem<Radiology?>> _raysItems = [];
   double totPrice = 0.0;
+  bool? side;
 
+  String sidesDropdownValue = "Unknown";
   String? _errorText;
   bool isLoading = false;
   bool loadingRays = true;
@@ -138,7 +141,8 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
             actualPrice: actualPriceController.text,
             radiologyIDs: selectedRays.map((e) => e.id).toList(),
             notes: notesController.text,
-            shiftID: shiftID);
+            shiftID: shiftID,
+            side: sides[sidesDropdownValue]);
 
         if (widget.isEditing) {
           appointment.id = widget.appointment!.id;
@@ -299,6 +303,33 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                                 ),
                               ],
                             ),
+                      Spacer(),
+                      Text(
+                        "Side:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
+                      DropdownButton<String>(
+                        value: sidesDropdownValue,
+                        icon: const Icon(Icons.arrow_downward),
+                        elevation: 16,
+                        underline: Container(
+                          height: 2,
+                        ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            sidesDropdownValue = newValue!;
+                          });
+                        },
+                        items: sides.keys
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                      Padding(padding: EdgeInsets.symmetric(horizontal: 15)),
                     ],
                   ),
                 ),
@@ -321,29 +352,59 @@ class _NewEditAppointmentDialogState extends State<NewEditAppointmentDialog> {
                               absorbing: isAnotherSupervisor,
                               child: Opacity(
                                 opacity: isAnotherSupervisor ? 0.3 : 1.0,
-                                child: DropdownButton<String>(
-                                  value: doctorDropdownValue,
-                                  icon: const Icon(Icons.arrow_downward),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  style: const TextStyle(color: Colors.white),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Colors.black26,
+                                child: SizedBox(
+                                  height: 80,
+                                  width: 150,
+                                  child: SearchChoices.single(
+                                    value: doctorDropdownValue,
+
+                                    hint: "Select Doctor",
+                                    searchHint: "Search..",
+                                    icon: const Icon(Icons.arrow_downward),
+                                    iconSize: 24,
+                                    // elevation: 16,
+                                    style: const TextStyle(color: Colors.white),
+                                    underline: Container(
+                                      height: 2,
+                                      color: Colors.black26,
+                                    ),
+                                    searchFn: (String keyword,
+                                        List<DropdownMenuItem<String>> items) {
+                                      List<int> ret = [];
+                                      List<Text> texts =
+                                          items.map<Text>((item) {
+                                        return item.child as Text;
+                                      }).toList();
+                                      for (int i = 0; i < texts.length; i++) {
+                                        if (texts[i]
+                                            .data!
+                                            .toLowerCase()
+                                            .contains(keyword.toLowerCase())) {
+                                          ret.add(i);
+                                        }
+                                      }
+
+                                      if (keyword.isEmpty) {
+                                        ret =
+                                            Iterable<int>.generate(items.length)
+                                                .toList();
+                                      }
+                                      return (ret);
+                                    },
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        doctorDropdownValue = newValue!;
+                                      });
+                                    },
+                                    items: doctors
+                                        .map<DropdownMenuItem<String>>((value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value.username,
+                                        child: Text(
+                                            "${value.firstName} ${value.lastName}"),
+                                      );
+                                    }).toList(),
                                   ),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      doctorDropdownValue = newValue!;
-                                    });
-                                  },
-                                  items: doctors
-                                      .map<DropdownMenuItem<String>>((value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value.username,
-                                      child: Text(
-                                          "${value.firstName} ${value.lastName}"),
-                                    );
-                                  }).toList(),
                                 ),
                               ),
                             ),

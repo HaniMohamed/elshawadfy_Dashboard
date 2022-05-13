@@ -25,7 +25,7 @@ class CRUDAppointmentsServices {
           response.data.map((model) => Appointment.fromJson(model)));
       // log(appointments[0].patient!.username.toString());
     } on DioError catch (e) {
-      log("error in listAppointments => ${e.response}");
+      debugPrint("error in listAppointments => ${e.response}");
       if (e.response!.statusCode == 403) {
         prefs.clear();
         Navigator.of(context)
@@ -41,7 +41,7 @@ class CRUDAppointmentsServices {
 
     FormData formData;
     formData = FormData.fromMap(appointment!.toJson());
-    log(formData.fields.join("\n"));
+    debugPrint(formData.fields.join("\n"));
 
     try {
       response = await Dio().post(

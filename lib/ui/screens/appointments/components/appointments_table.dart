@@ -160,7 +160,8 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
             ],
           ),
         ),
-        DataCell(Text(rays.join(", "))),
+        DataCell(Text(rays.join(", ") +
+            "${appointment.sideKey == null ? "" : " (${appointment.sideKey})"}")),
         if (!Responsive.isMobile(context))
           DataCell(Text(
               "${appointment.totalPrice.toString()} - (${appointment.actualPrice.toString()})")),
@@ -342,7 +343,9 @@ class _AppointmentsTableState extends State<AppointmentsTable> {
                             pw.Column(children: [
                               pw.Container(
                                   padding: pw.EdgeInsets.all(10),
-                                  child: pw.Text(rays.join(", "),
+                                  child: pw.Text(
+                                      rays.join(", ") +
+                                          "${appointment.sideKey == null ? "" : " (${appointment.sideKey})"}",
                                       textAlign: pw.TextAlign.center,
                                       style: pw.TextStyle(
                                           font: pw.Font.ttf(data),
